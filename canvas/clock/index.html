@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .clock-wrapper{
+            width: 400px;
+            height: 400px;
+            margin: 200px auto;
+            background-color: #ededed;
+            border-radius: 40px;
+        }
+
+        .clock-wrapper canvas{
+            margin-top: 50px;
+            margin-left: 50px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="clock-wrapper">
+        <canvas id="clock"></canvas>
+    </div>
+    <script src="../../util/draw.js"></script>
+    <script src="./clock.js"></script>
+</body>
+</html>
