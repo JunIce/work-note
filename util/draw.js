@@ -3,7 +3,7 @@ class DrawCanvas {
         this.ctx = ctx
     }
 
-    drawCircle(x, y, r, start, end , fillColor = '#000') {
+    drawCircle(x, y, r, start = 0, end = Math.PI*2 , fillColor = '#000') {
         this.ctx.save()
         this.ctx.fillStyle = fillColor
         this.ctx.beginPath()
