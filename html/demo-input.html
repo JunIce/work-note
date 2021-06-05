@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Input</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(135deg, #a7c4bc, #dfeeea);
+        }
+
+        .input-wrapper{
+            width: 450px;
+            height: 100px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .input-data {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .input-data input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            border-bottom: 2px solid #999;
+            font-size: 20px;
+            box-sizing: border-box;
+        }
+
+        .input-data label {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            color: #999;
+            transition: all 0.1s ease;
+        }
+
+        .input-data input:focus ~ label,
+        .input-data input:valid ~ label{
+            font-size: 15px;
+            color: #2541b2;
+            transform: translateY(-20px);
+        }
+
+        .input-data .underline {
+            width: 100%;
+            height: 2px;
+            position: absolute;
+            bottom: 0px;
+        }
+        .input-data .underline::before{
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: #2541b2;
+            position: absolute;
+            bottom: 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .input-data input:focus ~ .underline::before,
+        .input-data input:valid ~ .underline::before {
+            transform: scaleX(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="input-wrapper">
+        <div class="input-data">
+            <input type="text" required>
+            <label>Name</label>
+            <div class="underline"></div>
+        </div>
+    </div>
+</body>
+</html>
