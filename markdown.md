@@ -44,8 +44,8 @@ async 异步加载
 defer 延迟加载
 
 ## b 与 strong 的区别和 i 与 em 的区别
-<b> <i> 是自然样式标签
-<em> 和 <strong> 是语义样式标签
+`<b> <i> `是自然样式标签
+`<em>` 和 `<strong> `是语义样式标签
 
 ## cookie sessionStorage localStorage
 - cookie 4k
@@ -82,4 +82,90 @@ document.addEventListener('visibilitychange', function() {
 <div style="height:1px;overflow:hidden;background:red"></div>
 ```
 
-## 
+## IE Chrome 并行下载多少个资源
+IE6 2个 其他6个
+
+## Event Loop
+[https://github.com/lgwebdream/FE-Interview/issues/26](https://github.com/lgwebdream/FE-Interview/issues/26)
+
+同步任务是直接放在主线程上排队依次执行，异步任务会放在任务队列中，若有多个异步任务则需要在任务队列中排队等待，任务队列类似于缓冲区，任务下一步会被移到调用栈然后主线程执行调用栈的任务。
+> 调用栈：调用栈是一个栈结构，函数调用会形成一个栈帧，帧中包含了当前执行函数的参数和局部变量等上下文信息，函数执行完后，它的执行上下文会从栈中弹出。
+
+### macro-task  
+    setTimeout setInterval script UI渲染
+### micro-task
+    Promise.then() MutationObserve
+
+### requestAnimationFrame 
+    既不是宏任务也不是微任务
+
+GUI渲染之前，micro-task 之后，由浏览器决定执行时机
+
+### 执行机制：
+1个宏任务 清空所有微任务，最后更新页面视图
+
+## node中的Event Loop
+采用v8作为js的解析引擎
+
+libuv负责Node api的执行，讲不同的任务分配给线程，形成一个Event Loop,以异步的形式最后讲执行结果返回给V8，v8返回给用户
+
+## node middleware
+
+```js
+const http = require('http')
+
+function compose(middlewares) {
+    return ctx => {
+        function dispatch(i) {
+            const fn = middlewares[i]
+            try {
+                return Promise.resolve(fn(ctx, dispatch.bind(null, i + 1)))
+            } catch(err) {
+                Promise.reject(err)
+            }
+        }
+        return dispatch(0)
+    }
+}
+
+
+class App {
+
+    constructor() {
+        this.middlewares = []
+    }
+
+    add(fn) {
+        this.middlewares.push(fn)
+        return this
+    }
+
+    handleRequest(ctx, middleware) {
+        return middleware(ctx)
+    }
+
+
+    createContext(req, res) {
+        return {
+            req, res
+        }
+    }
+
+    callback() {
+        const fn = compose(this.middlewares)
+        return (req, res) => {
+            return this.handleRequest(this.createContext(req, res), fn)
+        }
+    }
+
+
+    listen(...args) {
+        const server = http.createServer(this.callback())
+        return server.listen(...args)
+    }
+}
+
+
+```
+
+
