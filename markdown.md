@@ -168,4 +168,52 @@ class App {
 
 ```
 
+## node中间层的作用
+
+限流
+日志
+权限鉴别
+缓存
+路由
+服务端渲染
+监控
+代理
+
+## li与li之间的空白
+浏览器会把inline元素之间的空格、回车、tab渲染成一个空格，大约8px
+
+1)  li设置float：left
+2） li都写在同一行
+3） ul {
+     letter-spacing: 8px;
+    }
+    li {
+        letter-spacing: normal;
+    }
+
+## width: 100% 和 width: auto区别
+width 100% 元素宽度等于父元素宽度
+width auto 会使元素撑满整个父元素，margin、border、padding、content 区域会自动分配水 平空间。
+
+## margin 合并
+margin-top 和 margin-bottom 合并
+
+## BFC块级格式化上下文
+1. float
+2. position
+3. overflow hidden/auto
+4. display inline/block/inline-block/table-cell
+
+## 清除浮动
+1. clear: both
+2. BFC清除浮动
+
+## 去除 inline-block 元素间间距
+font-size:0
+letter-spacing -3px
+word-spacing -6px
+
+
+
+
 
