@@ -50,7 +50,23 @@
                       <img :src="item.avatar" alt="" />
                     </div>
                     <template v-if="item.type == 3">
-                      <div></div>
+                      <div class="msg-resume-requiry-box">
+                        <div class="msg-content-main">
+                          <div class="icon-message-resume">
+                            <img
+                              src="./images/icon-message-resume.png"
+                              alt=""
+                            />
+                          </div>
+                          <span class="icon-msg-text"
+                            >我想要一份您的附件简历到 我的邮箱。</span
+                          >
+                        </div>
+                        <div class="msg-req-btn-section">
+                          <div class="btn-item reject">拒绝</div>
+                          <div class="btn-item">同意</div>
+                        </div>
+                      </div>
                     </template>
                     <div class="msg-wrapper" v-else>
                       <span>{{ item.message }}</span>
@@ -61,14 +77,54 @@
 
               <div class="chat-message-tip">底部提示文字</div>
             </section>
-            <section class="chat-tab-menu"></section>
+            <section class="chat-tab-menu">
+              <template v-for="(m, idx) in tabMenus">
+                <div
+                  :key="idx"
+                  class="icon-menu"
+                  @click="onTabMenuClick(m)"
+                  v-popover:[m.ref]
+                >
+                  <el-tooltip :content="m.label" placement="bottom">
+                    <img :src="m.icon" :alt="m.label" />
+                  </el-tooltip>
+                </div>
+              </template>
+
+              <el-popover
+                ref="emojiPopperRef"
+                placement="top-start"
+                popper-class="chat-msg-menu-popper"
+              >
+                <div class="popper-emoji-container">
+                  <ul>
+                    <template v-for="(e, idx) in emojiList">
+                      <li :key="idx">{{ e.char }}</li>
+                    </template>
+                  </ul>
+                </div>
+              </el-popover>
+
+              <el-popover
+                ref="sentencePopperRef"
+                placement="top-start"
+                popper-class="chat-msg-menu-popper"
+              >
+                <div class="popper-common-sentence-container">
+                  <ul>
+                    <template v-for="(s, idx) in commonSentenceList">
+                      <li :key="idx">{{ s }}</li>
+                    </template>
+                  </ul>
+                </div>
+              </el-popover>
+            </section>
             <section class="chat-input">
-              <el-input
+              <div
                 class="input-main"
                 type="textarea"
-                v-model="message"
-                @keyup.enter.native="confirm"
-              ></el-input>
+                contenteditable="true"
+              ></div>
               <div class="confirm-section">
                 <span class="confirm-txt"
                   >按Enter键发送，按Ctrl+Enter键换行</span
@@ -85,12 +141,21 @@
 
 <script>
 import socket from "./websockt";
+import emojiList from "./emoji.json";
+
+const emojiMap = emojiList.reduce((resultMap, item) => {
+  resultMap[item.group] = resultMap[item.group] || []
+  resultMap[item.group].push(item)
+  return resultMap
+}, {})
+console.log(emojiMap)
+
 
 export default {
   data() {
     return {
       message: "",
-      userList: new Array(10).fill(0).map((item) => {
+      userList: new Array(20).fill(0).map((item) => {
         return {
           avatar:
             "https://img1.baidu.com/it/u=1506064908,1725513834&fm=26&fmt=auto",
@@ -99,6 +164,53 @@ export default {
         };
       }),
       currentIndex: null,
+      emojiList: emojiMap['Smileys & Emotion'],
+      tabMenus: [
+        {
+          label: "表情",
+          icon: require("./images/icon_emoji.png"),
+          disabled: false,
+          key: "emojiPopper",
+          ref: "emojiPopperRef",
+        },
+        {
+          key: "commonSentencePopper",
+          ref: "sentencePopperRef",
+          label: "常用语",
+          icon: require("./images/icon_common_sentence.png"),
+          disabled: false,
+        },
+        {
+          label: "发送简历",
+          icon: require("./images/icon_resume.png"),
+          disabled: false,
+        },
+        {
+          label: "交换手机",
+          icon: require("./images/icon_phone.png"),
+          disabled: false,
+        },
+        {
+          label: "交换微信",
+          icon: require("./images/icon_wechat.png"),
+          disabled: false,
+        },
+      ],
+
+      commonSentenceList: [
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。0",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。1",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。2",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。3",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。4",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。5",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。6",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。6",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。6",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。6",
+        "您好，看见你的简历信息，和我们公司的要求非常匹配。6",
+      ],
+
       list: [
         {
           avatar:
@@ -128,14 +240,14 @@ export default {
     };
   },
   mounted() {
-    this.socket = socket.init("ws://localhost:62912", {
-      onOpen: () => {},
-      onMessage: (message) => {
-        let result = JSON.parse(message);
-        this.list.push(result);
-      },
-      onError: () => {},
-    });
+    // this.socket = socket.init("ws://localhost:62912", {
+    //   onOpen: () => {},
+    //   onMessage: (message) => {
+    //     let result = JSON.parse(message);
+    //     this.list.push(result);
+    //   },
+    //   onError: () => {},
+    // });
   },
   methods: {
     confirm() {
@@ -148,11 +260,21 @@ export default {
       this.socket.send(JSON.stringify({ message: this.message }));
       this.message = "";
     },
+    onTabMenuClick(menu) {
+      if (menu.key == "commonSentence") {
+      }
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
+// 公共消息偏移
+.common-msg-margin() {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
 .page-chat {
   .chat-header {
     height: 60px;
@@ -178,9 +300,12 @@ export default {
       height: 100%;
       background: #ffffff;
       box-shadow: -1px 2px 4px 2px rgba(170, 170, 170, 0.2);
+      overflow-y: auto;
+      overflow-x: hidden;
 
       .chat-list {
         padding-top: 10px;
+
         .chat-list-item {
           display: flex;
           align-items: center;
@@ -301,8 +426,7 @@ export default {
               background-color: #f3f3f3;
               border-radius: 0px 7px 7px 7px;
               padding: 12px 20px;
-              margin-left: 20px;
-              margin-top: 10px;
+              .common-msg-margin;
 
               font-size: 18px;
               font-family: PingFangSC-Regular, PingFang SC;
@@ -321,7 +445,6 @@ export default {
               background: #95beff;
               border-radius: 7px 0px 7px 7px;
               margin-left: 0;
-              // margin-right: 20px;
             }
           }
 
@@ -346,6 +469,77 @@ export default {
               text-align: center;
             }
           }
+
+          .msg-resume-requiry-box {
+            width: 270px;
+            height: 92px;
+            border-radius: 5px;
+            border: 1px solid #94bdff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            .common-msg-margin;
+
+            .msg-content-main {
+              display: flex;
+              flex: 1;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 20px;
+
+              .icon-message-resume {
+                display: inline-block;
+                width: 32px;
+                height: 32px;
+                background: #94bdff;
+                border-radius: 5px;
+                img {
+                  width: 20px;
+                  height: 20px;
+                  display: block;
+                  margin: 6px auto 0;
+                }
+              }
+
+              .icon-msg-text {
+                flex: 1;
+                font-size: 14px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: #666666;
+                line-height: 20px;
+                margin-left: 20px;
+              }
+            }
+
+            .msg-req-btn-section {
+              height: 35px;
+              background: #f8fbff;
+              border-radius: 0px 0px 5px 5px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              border-top: 1px solid #94bdff;
+
+              .btn-item {
+                width: 50%;
+                height: 35px;
+                line-height: 35px;
+                text-align: center;
+
+                font-size: 16px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: #94bdff;
+                cursor: pointer;
+
+                &.reject {
+                  color: #aaaaaa;
+                  border-right: 1px solid #94bdff;
+                }
+              }
+            }
+          }
         }
 
         .chat-message-tip {
@@ -363,9 +557,25 @@ export default {
       }
 
       .chat-tab-menu {
-        // width: 920px;
         height: 50px;
         background: #f2f7ff;
+        display: flex;
+        align-items: center;
+        padding-left: 16px;
+        padding-right: 16px;
+
+        .icon-menu {
+          width: 30px;
+          height: 30px;
+          margin-right: 30px;
+          cursor: pointer;
+
+          img {
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
       }
 
       .chat-input {
@@ -376,12 +586,8 @@ export default {
 
         .input-main {
           height: 100%;
-          /deep/ textarea {
-            height: 100%;
-            border: none;
-            outline: none;
-            padding: 0;
-          }
+          outline: none;
+          border: none;
         }
 
         .confirm-section {
