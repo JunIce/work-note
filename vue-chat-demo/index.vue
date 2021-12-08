@@ -32,49 +32,50 @@
             <span>title</span>
           </div>
           <section class="chat-room">
-            <section class="message-box">
-              <template v-for="(item, idx) in list">
-                <div
-                  :key="idx"
-                  :class="{
-                    'message-item': true,
-                    reverse: item.type == 2,
-                    center: item.type == 4,
-                  }"
-                >
-                  <div class="msg-box">
-                    <div
-                      v-if="item.type == 1 || item.type == 3"
-                      class="msg-avatar"
-                    >
-                      <img :src="item.avatar" alt="" />
-                    </div>
-                    <template v-if="item.type == 3">
-                      <div class="msg-resume-requiry-box">
-                        <div class="msg-content-main">
-                          <div class="icon-message-resume">
-                            <img
-                              src="./images/icon-message-resume.png"
-                              alt=""
-                            />
-                          </div>
-                          <span class="icon-msg-text"
-                            >我想要一份您的附件简历到 我的邮箱。</span
-                          >
-                        </div>
-                        <div class="msg-req-btn-section">
-                          <div class="btn-item reject">拒绝</div>
-                          <div class="btn-item">同意</div>
-                        </div>
+            <section class="message-box-wrapper">
+              <div class="message-box">
+                <template v-for="(item, idx) in list">
+                  <div
+                    :key="idx"
+                    :class="{
+                      'message-item': true,
+                      reverse: item.type == 2,
+                      center: item.type == 4,
+                    }"
+                  >
+                    <div class="msg-box">
+                      <div
+                        v-if="item.type == 1 || item.type == 3"
+                        class="msg-avatar"
+                      >
+                        <img :src="item.avatar" alt="" />
                       </div>
-                    </template>
-                    <div class="msg-wrapper" v-else>
-                      <span>{{ item.message }}</span>
+                      <template v-if="item.type == 3">
+                        <div class="msg-resume-requiry-box">
+                          <div class="msg-content-main">
+                            <div class="icon-message-resume">
+                              <img
+                                src="./images/icon-message-resume.png"
+                                alt=""
+                              />
+                            </div>
+                            <span class="icon-msg-text"
+                              >我想要一份您的附件简历到 我的邮箱。</span
+                            >
+                          </div>
+                          <div class="msg-req-btn-section">
+                            <div class="btn-item reject">拒绝</div>
+                            <div class="btn-item">同意</div>
+                          </div>
+                        </div>
+                      </template>
+                      <div class="msg-wrapper" v-else>
+                        <span>{{ item.message }}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </template>
-
+                </template>
+              </div>
               <div class="chat-message-tip">底部提示文字</div>
             </section>
             <section class="chat-tab-menu">
@@ -97,9 +98,9 @@
                 popper-class="chat-msg-menu-popper"
               >
                 <div class="popper-emoji-container">
-                  <ul>
+                  <ul @click="insertEmojiToMsg">
                     <template v-for="(e, idx) in emojiList">
-                      <li :key="idx">{{ e.char }}</li>
+                      <li :key="idx" data-attr="emoji">{{ e.char }}</li>
                     </template>
                   </ul>
                 </div>
@@ -121,6 +122,7 @@
             </section>
             <section class="chat-input">
               <div
+                ref="editorRef"
                 class="input-main"
                 type="textarea"
                 contenteditable="true"
@@ -144,12 +146,76 @@ import socket from "./websockt";
 import emojiList from "./emoji.json";
 
 const emojiMap = emojiList.reduce((resultMap, item) => {
-  resultMap[item.group] = resultMap[item.group] || []
-  resultMap[item.group].push(item)
-  return resultMap
-}, {})
-console.log(emojiMap)
+  resultMap[item.group] = resultMap[item.group] || [];
+  resultMap[item.group].push(item);
+  return resultMap;
+}, {});
+// console.log(emojiMap);
 
+export const on = (function () {
+  if (document.addEventListener) {
+    return function (element, event, handler) {
+      if (element && event && handler) {
+        element.addEventListener(event, handler, false);
+      }
+    };
+  } else {
+    return function (element, event, handler) {
+      if (element && event && handler) {
+        element.attachEvent("on" + event, handler);
+      }
+    };
+  }
+})();
+
+export const off = (function () {
+  if (document.removeEventListener) {
+    return function (element, event, handler) {
+      if (element && event) {
+        element.removeEventListener(event, handler, false);
+      }
+    };
+  } else {
+    return function (element, event, handler) {
+      if (element && event) {
+        element.detachEvent("on" + event, handler);
+      }
+    };
+  }
+})();
+
+const saveSelection = () => {
+  if (window.getSelection) {
+    let sel = window.getSelection();
+    if (sel.getRangeAt && sel.rangeCount) {
+      return sel.getRangeAt(0);
+    }
+  } else if (document.selection && document.selection.createRange) {
+    return document.selection.createRange();
+  }
+  return null;
+};
+
+const restoreSelection = (range) => {
+  if (range) {
+    if (window.getSelection) {
+      let sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } else if (document.selection && range.select) {
+      range.select();
+    }
+  }
+};
+
+function insertTextAtCaret(range, text) {
+  if (range) {
+    range.deleteContents();
+    range.insertNode(document.createTextNode(text));
+  } else if (document.selection && document.selection.createRange) {
+    document.selection.createRange().text = text;
+  }
+}
 
 export default {
   data() {
@@ -164,7 +230,7 @@ export default {
         };
       }),
       currentIndex: null,
-      emojiList: emojiMap['Smileys & Emotion'],
+      emojiList: emojiMap["Smileys & Emotion"],
       tabMenus: [
         {
           label: "表情",
@@ -248,17 +314,164 @@ export default {
     //   },
     //   onError: () => {},
     // });
+
+    // on(document, "selectionchange", this._selectionchange);
+    this.$nextTick(() => {
+      this.editorRef = this.$refs.editorRef;
+
+      on(this.editorRef, "paste", this._paste);
+      on(this.editorRef, "focus", this._focus);
+      on(this.editorRef, "blur", this._blur);
+      on(this.editorRef, "keyup", this._keyEvents);
+    });
+  },
+  beforeDestroy() {
+    // off(document, "selectionchange", this._selectionchange);
+    off(this.editorRef, "paste", this._paste);
+    off(this.editorRef, "focus", this._focus);
+    off(this.editorRef, "blur", this._blur);
+    off(this.editorRef, "keyup", this._keyEvents);
   },
   methods: {
+    // 键盘事件
+    _keyEvents(e) {
+      // enter 发送
+      if (e.keyCode == 13 && e.ctrlKey == false) {
+        this.confirm();
+        e.preventDefault();
+      }
+      // 换行
+      if (e.keyCode == 13 && e.ctrlKey == true) {
+        document.execCommand("insertLineBreak");
+        // e.preventDefault();
+      }
+    },
+    // 对焦事件
+    _focus(e) {
+      console.log("---focus event ---");
+    },
+    // 对焦事件
+    _blur() {
+      let range = saveSelection();
+      let selection = window.getSelection();
+      this.cacheSelection = {
+        isCollapsed: selection.isCollapsed,
+        focusNode: selection.focusNode,
+        offset: range.startOffset,
+        range: range,
+      };
+
+      console.log("---blur event ---", selection, this.cacheSelection);
+    },
+    _selectionchange(selection) {
+      console.log("_selectionchange: ", selection);
+    },
+    // 粘贴
+    _paste(e) {
+      let pastedText;
+      if (window.clipboardData && window.clipboardData.getData) {
+        pastedText = window.clipboardData.getData("Text");
+      } else if (
+        (e.clipboardData || e.originalEvent.clipboardData) &&
+        (e.clipboardData || e.originalEvent.clipboardData).getData
+      ) {
+        pastedText = (e.originalEvent || e).clipboardData.getData("text/plain");
+      }
+
+      this._insertTextAfterCursor(pastedText);
+
+      e.preventDefault();
+      console.log(pastedText);
+    },
+    // 插入文本到输入框
+    _insertTextAfterCursor(text) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return false;
+      selection.deleteFromDocument();
+      selection.getRangeAt(0).insertNode(document.createTextNode(text));
+    },
+    // 插入emoji
+    insertEmojiToMsg(e) {
+      if (e.target.nodeName === "LI") {
+        if(this.cacheSelection.range) {
+          insertTextAtCaret(this.cacheSelection.range, e.target.textContent)
+
+          // 移动光标
+          let range = document.createRange()
+          let node = this.cacheSelection.focusNode.nextSibling
+          range.setStart(node, node.length);
+          range.setEnd(node, node.length);
+          let selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          selection.collapseToEnd();
+        }
+      }
+    },
+    // 发送
     confirm() {
-      console.log(1);
-      socket.se;
+      console.log(this.editorRef.textContent);
+      let message = this.editorRef.textContent;
+
       this.list.push({
-        message: this.message,
-        type: 0,
+        message: message,
+        type: 2,
       });
-      this.socket.send(JSON.stringify({ message: this.message }));
-      this.message = "";
+      // this.socket.send(JSON.stringify({ message: message }));
+      setTimeout(() => {
+        this.editorRef.innerHTML = "";
+        this._lastMsgScrollToView();
+      });
+    },
+    _lastMsgScrollToView() {
+      document
+        .querySelector(".message-box")
+        .lastChild.scrollIntoView({ behavior: "smooth" });
+    },
+    pasteHtmlAtCaret(html, selectPastedContent) {
+      var sel, range;
+      if (window.getSelection) {
+        // IE9 and non-IE
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+          range = sel.getRangeAt(0);
+          range.deleteContents();
+
+          var el = document.createElement("div");
+          el.innerHTML = html;
+          var frag = document.createDocumentFragment(),
+            node,
+            lastNode;
+          while ((node = el.firstChild)) {
+            lastNode = frag.appendChild(node);
+          }
+          var firstNode = frag.firstChild;
+          range.insertNode(frag);
+
+          // Preserve the selection
+          if (lastNode) {
+            range = range.cloneRange();
+            range.setStartAfter(lastNode);
+            if (selectPastedContent) {
+              range.setStartBefore(firstNode);
+            } else {
+              range.collapse(true);
+            }
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        }
+      } else if ((sel = document.selection) && sel.type != "Control") {
+        // IE < 9
+        var originalRange = sel.createRange();
+        originalRange.collapse(true);
+        sel.createRange().pasteHTML(html);
+        if (selectPastedContent) {
+          range = sel.createRange();
+          range.setEndPoint("StartToStart", originalRange);
+          range.select();
+        }
+      }
     },
     onTabMenuClick(menu) {
       if (menu.key == "commonSentence") {
@@ -398,12 +611,20 @@ export default {
       flex-direction: column;
       height: calc(100% - 50px);
 
-      .message-box {
+      .message-box-wrapper {
         flex: 1;
-        padding: 20px;
         position: relative;
         overflow-y: auto;
+      }
+
+      .message-box {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        overflow-y: auto;
         overflow-x: hidden;
+        padding-bottom: 40px;
+        box-sizing: border-box;
 
         .message-item {
           .msg-box {
@@ -467,6 +688,7 @@ export default {
               line-height: 30px;
               padding: 0;
               text-align: center;
+              margin: 0;
             }
           }
 
@@ -541,19 +763,19 @@ export default {
             }
           }
         }
+      }
 
-        .chat-message-tip {
-          width: 100%;
-          height: 40px;
-          box-sizing: border-box;
-          color: #fff;
-          background: #5690f4;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          line-height: 40px;
-          padding: 0 18px;
-        }
+      .chat-message-tip {
+        width: 100%;
+        height: 40px;
+        box-sizing: border-box;
+        color: #fff;
+        background: #5690f4;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        line-height: 40px;
+        padding: 0 18px;
       }
 
       .chat-tab-menu {
@@ -588,6 +810,9 @@ export default {
           height: 100%;
           outline: none;
           border: none;
+          overflow-y: auto;
+          font-size: 14px;
+          line-height: 22px;
         }
 
         .confirm-section {
