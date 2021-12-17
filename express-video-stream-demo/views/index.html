@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div style="width: 400px; height: 200px; background-color: blue">
+      <video style="width: 100%; height: 100%" id="video" autoPlay controls></video>
+    </div>
+    <div>
+      <button id="videoBtn">播放</button>
+    </div>
+
+    <script>
+
+      const video = document.querySelector('#video')
+
+      function getVideo() {
+        const mediaSource = new MediaSource()
+        
+        video.src = URL.createObjectURL(mediaSource)
+
+        mediaSource.addEventListener('sourceopen', () => {
+          const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"')
+
+          fetch("http://127.0.0.1:9543/video")
+          .then(buffer => buffer.arrayBuffer()).then((data) => {
+            console.log(data);
+            sourceBuffer.appendBuffer(data)
+          });
+        });
+    
+      }
+
+      const btn = document.querySelector("#videoBtn");
+      btn.addEventListener("click", function () {
+        getVideo();
+      });
+    </script>
+  </body>
+</html>
