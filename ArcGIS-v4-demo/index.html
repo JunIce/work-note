@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Test local installation of ArcGIS API for JavaScript</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 93%;
+        width: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.22/"></script>
+
+    <script>
+      require(["esri/Basemap", "esri/layers/TileLayer", "esri/Map", "esri/views/SceneView"], function (
+        Basemap,
+        TileLayer,
+        Map,
+        SceneView
+      ) {
+        // --------------------------------------------------------------------
+        // If you do not have public internet access, change the layer URL to
+        // point to your own locally accessible cached service.
+        // --------------------------------------------------------------------
+        const layer = new TileLayer({
+          url: "https://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer"
+        });
+        const customBasemap = new Basemap({
+          baseLayers: [layer],
+          title: "My Basemap"
+        });
+        const myMap = new Map({
+          basemap: customBasemap
+        });
+        const view = new SceneView({
+          container: "viewDiv",
+          map: myMap
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="logDiv"></div>
+  </body>
+</html>
