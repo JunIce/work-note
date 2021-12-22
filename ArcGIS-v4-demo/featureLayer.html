@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>ArcGIS DEMO V4</title>
+  <style>
+    html,
+    body,
+    #map {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    .panel {
+      position: absolute;
+      top: 50px;
+      right: 50px;
+      z-index: 10;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./css/checkbox.css" />
+  <script src="./js/lodash.js"></script>
+  <script src="./js/jquery.js"></script>
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=FN5Ff1tS4NldxfZC2WHnpsW1kH3rmxVT"></script>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.21/"></script>
+</head>
+
+<body>
+  <div id="map"></div>
+  <div class="panel">
+    <div class="switch switch-large">
+      <input type="checkbox" checked data-layer-type="point" /> 点显示
+    </div>
+    <div class="switch switch-large">
+      <input type="checkbox" checked data-layer-type="line" /> 线显示
+    </div>
+    <div>
+      <button id="recenter">重新定位</button>
+      <button id="getPosition">百度/H5定位</button>
+    </div>
+  </div>
+
+  <script>
+    var expdate = new Date();
+    expdate.setTime(expdate.getTime() + 30 * 60 * 1000);
+    document.cookie = "loginName=psgwyxgs" + ";path=/";
+  </script>
+
+  <script>
+    // 必须放到头部，否则浏览器权限申请不成功
+    var geolocation = new BMap.Geolocation();
+    // 开启SDK辅助定位
+    geolocation.enableSDKLocation();
+
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+        // 原生h5定位服务
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            console.log('navigator: ', position)
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            })
+          }, () => bdMapGetLocation(resolve, reject), {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          });
+        } else {
+          bdMapGetLocation(resolve, reject)
+        }
+      })
+    }
+
+    //百度api SDK辅助定位
+    function bdMapGetLocation(resolve, reject) {
+      geolocation.getCurrentPosition(function (r) {
+        if (this.getStatus() == 0) {
+          console.log('bdMap: ', r)
+
+          resolve({
+            // 纬度
+            latitude: r.point.lat,
+            // 经度
+            longitude: r.point.lng
+          })
+        } else {
+          reject('定位失败，请稍后重试');
+        }
+      });
+    }
+  </script>
+  <script>
+    require(["esri/Basemap", "esri/layers/TileLayer", "esri/layers/FeatureLayer", "esri/Map", "esri/views/MapView", "esri/views/SceneView", "esri/layers/GraphicsLayer", "esri/Graphic", "esri/geometry/Point", "esri/geometry/Polyline", "esri/symbols/PictureMarkerSymbol", "esri/symbols/TextSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/Font", "esri/Color", "esri/geometry/Extent", "esri/geometry/SpatialReference",
+      "esri/layers/support/Field",
+      "esri/request"
+    ], function (
+      Basemap,
+      TileLayer,
+      FeatureLayer,
+
+      Map,
+      MapView,
+      SceneView,
+      GraphicsLayer,
+      Graphic,
+      Point,
+      Polyline,
+
+      PictureMarkerSymbol,
+      TextSymbol,
+      SimpleLineSymbol,
+
+      Font,
+      Color,
+      Extent,
+      SpatialReference,
+
+      Field,
+      esriRequest
+    ) {
+
+      let url = 
+      "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetWarm/MapServer"
+
+      const layer = new TileLayer({
+        url: url
+      });
+      const customBasemap = new Basemap({
+        baseLayers: [layer],
+        title: "My Basemap"
+      });
+      const myMap = new Map({
+        basemap: customBasemap,
+      });
+
+      const view = new MapView({
+        container: "map",
+        map: myMap,
+        center: [120.82, 32.03],
+        zoom: 15,
+      });
+
+
+      view.when(function () {
+
+
+        getData()
+          .then(({ points, lines }) => {
+            return {
+              points: points.map(point => _generatePoint(point)),
+              lines: lines.map(line => _generateLine(line)),
+            }
+          })
+          .then(({ points, lines }) => {
+            addPoint(points)
+            addLine(lines)
+          })
+      })
+
+      const pointLabel = {  // autocasts as new LabelClass()
+        symbol: {
+          type: "text",  // autocasts as new TextSymbol()
+          color: "white",
+          haloColor: "blue",
+          haloSize: 1,
+          font: {  // autocast as new Font()
+            family: "Ubuntu Mono",
+            size: 14,
+            weight: "bold"
+          }
+        },
+        labelPlacement: "above-right",
+        labelExpressionInfo: {
+          expression: "$feature.Team + TextFormatting.NewLine + $feature.Division"
+        },
+      };
+
+
+      function addPoint(graphics) {
+        let flayer = new FeatureLayer({
+          id: 'pointLayer',
+          source: graphics, // autocast as an array of esri/Graphic
+          geometryType: "point",
+          fields: [
+            new Field({
+              name: "ObjectID",
+              alias: "ObjectID",
+              type: "oid"
+            }),
+            new Field({
+              name: "Subsid",
+              alias: "Subsid",
+              type: "string"
+            })
+          ],
+          outFields: ["*"],
+          labelingInfo: [pointLabel],
+          renderer: {
+            type: "unique-value",
+            field: "Subsid",
+            defaultSymbol: { type: "simple-fill" },
+            uniqueValueInfos: [
+              {
+                value: "窨井",
+                symbol: {
+                  type: "picture-marker",
+                  url: "./images/1.png",
+                  width: "20px",
+                  height: "20px"
+                }
+              }, {
+                value: "阀门",
+                symbol: {
+                  type: "picture-marker",
+                  url: "./images/2.png",
+                  width: "20px",
+                  height: "20px"
+                }
+              }
+            ]
+          }
+        });
+
+        myMap.add(flayer);
+        return flayer;
+      }
+
+      function addLine(graphics) {
+        let flayer = new FeatureLayer({
+          id: 'lineLayer',
+          source: graphics,
+          objectIdField: "ObjectID",
+          spatialReference: { wkid: 4326 },
+          geometryType: "polyline",
+
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-line",
+              color: "#000",
+              width: 2,
+            }
+          }
+        });
+
+        myMap.add(flayer);
+        return flayer;
+      }
+
+
+
+      function _generatePoint(item) {
+        var pt = new Point({
+          latitude: item.X,
+          longitude: item.Y,
+        });
+
+        return {
+          geometry: pt,
+          attributes: {
+            text: item.Exp_No,
+            Subsid: item.Subsid,
+            color: new Color([18, 150, 219, 1])
+          }
+        };
+      }
+
+      function _generateLine(path) {
+        return {
+          geometry: {
+            type: "polyline",
+            paths: path
+          }
+        };
+      }
+
+      // 画线
+      function addLines(paths) {
+        var lineLayers = new GraphicsLayer({
+          id: "lines",
+        });
+
+        let result = [];
+        paths.forEach((path) => {
+          result.push(new Polyline({
+            paths: [path],
+            spatialReference: { wkid: 4326 },
+          }));
+        });
+
+        var sls = new SimpleLineSymbol({
+          width: 2,
+          style: 'solid',
+          color: new Color([0, 0, 0, 255]),
+          miterLimit: 4
+        });
+
+        result.forEach(item => {
+          lineLayers.add(new Graphic({ geometry: item, symbol: sls }));
+        })
+
+        glineLayers = lineLayers;
+        //console.log(lineLayers);
+        myMap.add(lineLayers);
+      }
+
+
+
+      $(".switch").on("click", function () {
+        if ($(this).find("input[type='checkbox']")) {
+          let target;
+          let checked = $(this)
+            .find("input[type='checkbox']")
+            .prop("checked");
+          let type = $(this)
+            .find("input[type='checkbox']")
+            .data("layer-type");
+
+          target = myMap.findLayerById(`${type}Layer`)
+          target.visible = checked
+        }
+      });
+
+      $("#recenter").click(function () {
+        view.goTo({
+          center: [120.82, 32.03]
+        })
+      });
+
+      // 定位
+      $('#getPosition').click(function () {
+        getLocation().then((position) => {
+          let { latitude, longitude } = position
+          console.log(position)
+          addCurrentPosition({
+            X: latitude,
+            Y: longitude
+          })
+        }).catch(() => {
+          alert('定位失败，请稍后再试')
+        })
+      })
+
+      // 根据当前定位生成标记
+      function addCurrentPosition(point) {
+        // 定位图层
+        var currentPointLayer = new GraphicsLayer({
+          id: "current-point",
+        });
+        // 根据经纬度生成定位点
+        var pt = new Point({
+          latitude: point.X,
+          longitude: point.Y,
+        });
+        // 制作图片标记
+        var symbol = new PictureMarkerSymbol({
+          url: './images/position-fill.png',
+          width: 20,
+          height: 20
+        });
+        // 加到图层
+        currentPointLayer.add(new Graphic({
+          geometry: pt, symbol
+        }));
+        // 添加到地图
+        myMap.add(currentPointLayer);
+        setTimeout(() => {
+          view.goTo({
+            center: [point.X, point.Y]
+          })
+        }, 500)
+        console.log('定位成功')
+      }
+
+
+
+      function getData() {
+        return esriRequest("./data.json", {
+          responseType: "json"
+        }).then(res => {
+          let lines = [];
+          let points = [];
+
+          _.forEach(res.data, (item) => {
+            let { E_GEO, S_GEO } = item;
+            points = [...points, S_GEO, E_GEO];
+
+            lines.push([[S_GEO.Y, S_GEO.X], [E_GEO.Y, E_GEO.X]]);
+          });
+
+          return {
+            points,
+            lines
+          }
+        })
+      }
+    });
+  </script>
+</body>
+
+</html>
