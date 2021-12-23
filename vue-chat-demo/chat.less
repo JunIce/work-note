@@ -1,369 +1,253 @@
 // 公共消息偏移
 .common-msg-margin() {
-    margin-left: 20px;
-    margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.page-chat {
+  padding-top: 40px;
+  padding-bottom: 40px;
+
+  .chat-header {
+    height: 60px;
+    line-height: 60px;
+    padding: 0 24px;
+    background: #ffffff;
+    box-shadow: 0px 2px 4px 2px rgba(170, 170, 170, 0.2);
+
+    font-size: 18px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #666666;
   }
-  
-  .page-chat {
-    padding-top: 40px;
-    padding-bottom: 40px;
-  
-    .chat-header {
-      height: 60px;
-      line-height: 60px;
-      padding: 0 24px;
+
+  .chat-wrapper {
+    margin-top: 10px;
+    display: flex;
+    height: 800px;
+
+    .chat-side-box {
+      width: 330px;
+      // width: 330px;
+      height: 100%;
       background: #ffffff;
-      box-shadow: 0px 2px 4px 2px rgba(170, 170, 170, 0.2);
-  
-      font-size: 18px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #666666;
-    }
-  
-    .chat-wrapper {
-      margin-top: 10px;
-      display: flex;
-      height: 800px;
-  
-      .chat-side-box {
-        width: 330px;
-        // width: 330px;
-        height: 100%;
-        background: #ffffff;
-        box-shadow: -1px 2px 4px 2px rgba(170, 170, 170, 0.2);
-        overflow-y: auto;
-        overflow-x: hidden;
-  
-        .chat-list {
-          padding-top: 10px;
-  
-          .chat-list-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 24px;
-            box-sizing: border-box;
-            position: relative;
-  
-            .avatar-box {
-              width: 40px;
-              height: 40px;
-              border-radius: 50%;
-              overflow: hidden;
-              img {
-                width: 100%;
-                height: 100%;
-                display: block;
-              }
-            }
-  
-            .item-info {
-              flex-grow: 1;
-              margin-left: 10px;
-  
-              .name {
-                font-size: 18px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
-                color: #666666;
-                line-height: 25px;
-              }
-  
-              .desc {
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
-                color: #aaaaaa;
-                line-height: 20px;
-                margin-top: 6px;
-              }
-            }
-  
-            &::before {
-              content: "";
-              display: block;
-              width: 4px;
-              height: 100%;
-              background-color: transparent;
-              position: absolute;
-              top: 0;
-              left: 0;
-            }
-  
-            &:hover {
-              background-color: #f3f8ff;
-            }
-  
-            &.active {
-              background-color: #f3f8ff;
-  
-              &::before {
-                background-color: #94bdff;
-              }
-            }
-          }
-        }
-      }
-  
-      .chat-room-wrapper {
-        flex: 1;
-        height: 100%;
-        margin-left: 10px;
-        box-shadow: -1px 2px 4px 2px rgba(170, 170, 170, 0.2);
-      }
-  
-      .chat-room-header {
-        width: 100%;
-        height: 50px;
-        background: #f2f7ff;
-        line-height: 50px;
-        padding: 0 18px;
-        box-sizing: border-box;
-        font-size: 18px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #666666;
-      }
-  
-      .chat-room {
-        display: flex;
-        flex-direction: column;
-        height: calc(100% - 50px);
-  
-        .message-box-wrapper {
-          flex: 1;
-          position: relative;
-          overflow-y: auto;
-        }
-  
-        .message-box {
-          width: 100%;
-          height: 100%;
-          padding: 20px;
-          overflow-y: auto;
-          overflow-x: hidden;
-          padding-bottom: 40px;
-          box-sizing: border-box;
-  
-          .message-item {
-            .msg-box {
-              display: flex;
-              margin-bottom: 20px;
-  
-              .msg-avatar {
-                width: 34px;
-                height: 34px;
-                border-radius: 100%;
-                overflow: hidden;
-                img {
-                  width: 100%;
-                  height: 100%;
-                  display: block;
-                }
-              }
-  
-              .msg-wrapper {
-                background-color: #f3f3f3;
-                border-radius: 0px 7px 7px 7px;
-                padding: 12px 20px;
-                .common-msg-margin;
-  
-                font-size: 18px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
-                color: #666666;
-              }
-            }
-  
-            &.reverse {
-              .msg-box {
-                flex-direction: row-reverse;
-              }
-  
-              .msg-wrapper {
-                color: #fff;
-                background: #95beff;
-                border-radius: 7px 0px 7px 7px;
-                margin-left: 0;
-              }
-            }
-  
-            &.center {
-              .msg-box {
-                justify-content: center;
-              }
-  
-              .msg-wrapper {
-                width: 216px;
-                height: 30px;
-                background: #ffffff;
-                border-radius: 15px;
-                border: 1px solid #94bdff;
-  
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
-                color: #94bdff;
-                line-height: 28px;
-                padding: 0;
-                text-align: center;
-                margin: 0;
-              }
-            }
-  
-            .msg-resume-requiry-box {
-              width: 270px;
-              height: 92px;
-              border-radius: 5px;
-              border: 1px solid #94bdff;
-              overflow: hidden;
-              display: flex;
-              flex-direction: column;
-              .common-msg-margin;
-  
-              .msg-content-main {
-                display: flex;
-                flex: 1;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 20px;
-  
-                .icon-message-resume {
-                  display: inline-block;
-                  width: 32px;
-                  height: 32px;
-                  background: #94bdff;
-                  border-radius: 5px;
-                  img {
-                    width: 20px;
-                    height: 20px;
-                    display: block;
-                    margin: 6px auto 0;
-                  }
-                }
-  
-                .icon-msg-text {
-                  flex: 1;
-                  font-size: 14px;
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
-                  color: #666666;
-                  line-height: 20px;
-                  margin-left: 20px;
-                }
-              }
-  
-              .msg-req-btn-section {
-                height: 35px;
-                background: #f8fbff;
-                border-radius: 0px 0px 5px 5px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                border-top: 1px solid #94bdff;
-  
-                .btn-item {
-                  width: 50%;
-                  height: 35px;
-                  line-height: 35px;
-                  text-align: center;
-  
-                  font-size: 16px;
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
-                  color: #94bdff;
-                  cursor: pointer;
-  
-                  &.reject {
-                    color: #aaaaaa;
-                    border-right: 1px solid #94bdff;
-                  }
-                }
-              }
-            }
-          }
-        }
-  
-        .chat-message-tip {
-          width: 100%;
-          height: 40px;
-          box-sizing: border-box;
-          color: #fff;
-          background: #5690f4;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          line-height: 40px;
-          padding: 0 18px;
-        }
-  
-        .chat-tab-menu {
-          height: 50px;
-          background: #f2f7ff;
+      box-shadow: -1px 2px 4px 2px rgba(170, 170, 170, 0.2);
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      .chat-list {
+        padding-top: 10px;
+
+        .chat-list-item {
           display: flex;
           align-items: center;
-          padding-left: 16px;
-          padding-right: 16px;
-  
-          .icon-menu {
-            width: 30px;
-            height: 30px;
-            margin-right: 30px;
-            cursor: pointer;
-  
+          padding: 10px 24px;
+          box-sizing: border-box;
+          position: relative;
+
+          .avatar-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
             img {
               width: 100%;
               height: 100%;
               display: block;
             }
           }
-        }
-  
-        .chat-input {
-          height: 190px;
-          padding: 20px;
-          box-sizing: border-box;
-          position: relative;
-  
-          .input-main {
+
+          .item-info {
+            flex-grow: 1;
+            margin-left: 10px;
+
+            .name {
+              font-size: 18px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #666666;
+              line-height: 25px;
+            }
+
+            .desc {
+              font-size: 14px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #aaaaaa;
+              line-height: 20px;
+              margin-top: 6px;
+            }
+          }
+
+          &::before {
+            content: "";
+            display: block;
+            width: 4px;
             height: 100%;
-            outline: none;
-            border: none;
-            overflow-y: auto;
-            font-size: 14px;
+            background-color: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+
+          &:hover {
+            background-color: #f3f8ff;
+          }
+
+          &.active {
+            background-color: #f3f8ff;
+
+            &::before {
+              background-color: #94bdff;
+            }
+          }
+        }
+      }
+
+      .empty-contact-box {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 12px;
+        color: #999;
+      }
+    }
+
+    .chat-room-wrapper {
+      flex: 1;
+      height: 100%;
+      margin-left: 10px;
+      box-shadow: -1px 2px 4px 2px rgba(170, 170, 170, 0.2);
+    }
+
+    .empty-chat-room-fill {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 12px;
+      color: #999;
+    }
+
+    .chat-room-header {
+      width: 100%;
+      height: 50px;
+      background: #f2f7ff;
+      line-height: 50px;
+      padding: 0 18px;
+      box-sizing: border-box;
+      font-size: 18px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+    }
+
+    .chat-room {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 50px);
+
+      .message-box-wrapper {
+        flex: 1;
+        position: relative;
+        overflow-y: auto;
+      }
+
+      .message-box {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 60px;
+        box-sizing: border-box;
+      }
+
+      .chat-message-tip {
+        width: 100%;
+        height: 40px;
+        box-sizing: border-box;
+        color: #fff;
+        background: #5690f4;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        line-height: 40px;
+        padding: 0 18px;
+      }
+
+      .chat-tab-menu {
+        height: 50px;
+        background: #f2f7ff;
+        display: flex;
+        align-items: center;
+        padding-left: 16px;
+        padding-right: 16px;
+
+        .icon-menu {
+          width: 30px;
+          height: 30px;
+          margin-right: 30px;
+          cursor: pointer;
+
+          img {
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+      }
+
+      .chat-input {
+        height: 190px;
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
+
+        .input-main {
+          height: 100%;
+          outline: none;
+          border: none;
+          overflow-y: auto;
+          font-size: 14px;
+          line-height: 22px;
+        }
+
+        .confirm-section {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+
+          .confirm-txt {
+            font-size: 16px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #d8d8d8;
             line-height: 22px;
           }
-  
-          .confirm-section {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-  
-            .confirm-txt {
-              font-size: 16px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
-              color: #d8d8d8;
-              line-height: 22px;
-            }
-  
-            .confirm-btn {
-              width: 80px;
-              height: 36px;
-              margin-left: 10px;
-              background: #ffffff;
-              border-radius: 18px;
-              border: 1px solid #5690f4;
-  
-              font-size: 16px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
-              color: #5690f4;
-              text-align: center;
-              cursor: pointer;
-            }
+
+          .confirm-btn {
+            width: 80px;
+            height: 36px;
+            margin-left: 10px;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #5690f4;
+
+            font-size: 16px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #5690f4;
+            text-align: center;
+            cursor: pointer;
           }
         }
       }
     }
   }
+}

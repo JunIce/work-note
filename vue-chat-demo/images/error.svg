@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="11px" viewBox="0 0 20 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>失败</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="消息-聊天" transform="translate(-1112.000000, -612.000000)">
+            <g id="编组-27" transform="translate(717.000000, 220.000000)">
+                <g id="失败" transform="translate(395.000000, 392.000000)">
+                    <rect id="矩形备份-2" fill="#F56C6C" x="0" y="0" width="20" height="11" rx="2"></rect>
+                    <text font-family="PingFangSC-Regular, PingFang SC" font-size="8" font-weight="normal" fill="#FFFFFF">
+                        <tspan x="2" y="8">失败</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
