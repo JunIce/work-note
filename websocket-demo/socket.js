@@ -36,6 +36,7 @@ export const log = (args) => {
   console.error(args);
 };
 
+let socketInstance = null;
 export default class Socket {
   constructor(url, options = {}) {
     this._url = url;
@@ -103,11 +104,14 @@ export default class Socket {
   }
 
   connect() {
+    if (socketInstance && socketInstance.readyState == 1)
+      return Promise.resolve(this);
     this._wait().then(() => {
       this._retryCount++;
       this._connectLock = true;
 
-      this._ws = new WebSocket(this._url);
+      socketInstance = new WebSocket(this._url);
+      this._ws = socketInstance;
 
       this.bindEvent();
     });
