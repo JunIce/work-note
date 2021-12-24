@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      .list-box {
+        width: 300px;
+      }
+
+      .list-item {
+        padding: 10px 20px;
+      }
+      .list-item:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <ul class="list-box">
+        <li class="list-item">123</li>
+      </ul>
+
+      <button id="insert">insert</button>
+      <button id="change">change attributes</button>
+    </div>
+
+    <script>
+      const cb = (mutations) => {
+        mutations.forEach((element) => {
+          console.log(element);
+        });
+      };
+
+      var observer = new MutationObserver(cb);
+
+      var el = document.querySelector(".list-box");
+
+      observer.observe(el, {
+        subtree: true,
+        attributes: true,
+        childList: true,
+      });
+
+      document.querySelector("#insert").addEventListener("click", function () {
+        var t = document.createElement("li");
+        t.classList.add("list-item");
+        t.innerHTML = 456;
+        el.appendChild(t);
+      });
+
+      document.querySelector("#change").addEventListener("click", function () {
+        var t = document.querySelector("li");
+        t.setAttribute("data-attr", Math.random() * 10 + 1);
+      });
+    </script>
+  </body>
+</html>
