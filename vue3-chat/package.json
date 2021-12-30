@@ -24,6 +24,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
     "koa-websocket": "^6.0.0",
     "sequelize": "^6.12.4",
     "sqlite3": "^5.0.2"

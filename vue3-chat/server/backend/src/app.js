@@ -1,30 +1,30 @@
 const Koa = require("koa");
 const Router = require("@koa/router");
 const websockify = require("koa-websocket");
+const bodyparser = require("koa-bodyparser");
 const Queue = require("bull");
+
+const InitRoutes = require("./router");
 
 const port = 3002;
 
 const messageQueue = new Queue("message queue", "redis://127.0.0.1:6379");
 
-const app = websockify(new Koa());
-
+const app = new Koa();
+app.use(bodyparser());
 const router = new Router();
 
 app.use((context, next) => {
     context.messageQueue = messageQueue;
-
-    next()
-
-})
-
-router.get("/", (ctx, next) => {
-    ctx.body = {
-        data: "success",
-    };
+    context.body = context.request.body;
+    next();
 });
 
-app.ws.use(
+InitRoutes(router);
+
+const websocketApp = websockify(app);
+
+websocketApp.ws.use(
     router.all("/message/ws", (ctx) => {
         ctx.websocket.send("hello world");
         ctx.websocket.on("message", function (message) {
