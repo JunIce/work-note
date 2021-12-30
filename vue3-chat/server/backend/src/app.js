@@ -14,10 +14,9 @@ const app = new Koa();
 app.use(bodyparser());
 const router = new Router();
 
-app.use((context, next) => {
-    context.messageQueue = messageQueue;
-    context.body = context.request.body;
-    next();
+app.use(async (ctx, next) => {
+    ctx.messageQueue = messageQueue;
+    await next();
 });
 
 InitRoutes(router);
@@ -34,8 +33,8 @@ websocketApp.ws.use(
     })
 );
 
-app.use(router.routes()).use(router.allowedMethods());
-
-app.listen(port, () => {
-    console.log(`listening on port ${port}`);
-});
+app.use(router.routes())
+    .use(router.allowedMethods())
+    .listen(port, () => {
+        console.log(`listening on port ${port}`);
+    });

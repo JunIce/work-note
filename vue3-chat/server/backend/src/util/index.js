@@ -27,7 +27,14 @@ function parseAction({ action, ...rest }) {
     }
 }
 
+function wait(time) {
+    return new Promise(resolve => {
+        setTimeout(resolve, time)
+    })
+}
+
 module.exports = {
     ACTION_TYPE,
     parseAction,
+    wait
 };

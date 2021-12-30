@@ -19,4 +19,4 @@ const Users = db.define('User', {
 })
 
 
-module.exports = Users;
+module.exports = Users; 
