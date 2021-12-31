@@ -9,13 +9,32 @@ const ACTION_TYPE = {
     HISTORY: 12,
 };
 
-function parseAction({ action, ...rest }) {
+const userOnlineMap = new Map();
+const userOnlineIds = new Set();
+
+function parseAction({ action, ...rest }, ctx) {
     switch (action) {
+        // 连接
         case ACTION_TYPE.CONNECT:
+            const { fromId } = rest.chatMsg;
+            if (fromId && !userOnlineIds.has(fromId)) {
+                userOnlineIds.set(fromId);
+                userOnlineMap.set(fromId, ctx.websocket);
+            }
+        break;
 
         case ACTION_TYPE.FETCH_ID:
+        
+        break;
 
         case ACTION_TYPE.MESSAGE:
+            const { fromId, toId } = rest.chatMsg;
+            // 在线
+            if(userOnlineIds.has(toId)) {
+                let socket = userOnlineMap.get(toId);
+                socket.send("hello world")
+            }
+        break;
 
         case ACTION_TYPE.STATUS_NOTICE:
 
@@ -27,11 +46,7 @@ function parseAction({ action, ...rest }) {
     }
 }
 
-function wait(time) {
-    return new Promise(resolve => {
-        setTimeout(resolve, time)
-    })
-}
+const wait = (time) => new Promise(resolve => setTimeout(resolve, time))
 
 module.exports = {
     ACTION_TYPE,

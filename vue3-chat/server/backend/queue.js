@@ -7,18 +7,14 @@ myqueue.process(function (job, done) {
   done();
 });
 
-function say() {
-  myqueue.add(
-    {
-      message: "success",
-    },
-    { delay: 5000 }
-  );
-}
 
+myqueue.on('process', (job, process) => {
+  console.log(`myqueue process: `, job)
+})
 
-say();
-
+myqueue.on('completed', (job, result) => {
+  console.log(`myqueue computed: `, result)
+})
 
 module.exports = {
     queue: myqueue

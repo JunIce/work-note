@@ -5,6 +5,7 @@ const bodyparser = require("koa-bodyparser");
 const Queue = require("bull");
 
 const InitRoutes = require("./router");
+const { parseAction } = require("./util");
 
 const port = 3002;
 
@@ -25,11 +26,7 @@ const websocketApp = websockify(app);
 
 websocketApp.ws.use(
     router.all("/message/ws", (ctx) => {
-        ctx.websocket.send("hello world");
-        ctx.websocket.on("message", function (message) {
-            // print message from the client
-            console.log(message);
-        });
+        ctx.websocket.on("message", (message) => parseAction.call(null, message, ctx));
     })
 );
 

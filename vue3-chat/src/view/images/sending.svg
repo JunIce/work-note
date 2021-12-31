@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="11px" viewBox="0 0 20 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>等</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="消息-聊天" transform="translate(-1112.000000, -630.000000)">
+            <g id="编组-27" transform="translate(717.000000, 220.000000)">
+                <g id="等" transform="translate(395.000000, 410.000000)">
+                    <rect id="矩形备份-3" fill="#C0C4CC" x="0" y="0" width="20" height="11" rx="2"></rect>
+                    <circle id="椭圆形" fill="#FFFFFF" cx="5.5" cy="5.5" r="1.5"></circle>
+                    <circle id="椭圆形备份-3" fill="#FFFFFF" opacity="0.8" cx="10.5" cy="5.5" r="1.5"></circle>
+                    <circle id="椭圆形备份-4" fill="#FFFFFF" opacity="0.5" cx="15.5" cy="5.5" r="1.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
