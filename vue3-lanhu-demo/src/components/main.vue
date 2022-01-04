@@ -6,7 +6,12 @@
       @mousedown="onMouseDown"
       @mouseup="onMouseUp"
       @mousemove="onMouseMove"
-    ></div>
+    >
+      <div class="line-box">
+        <div class="line-x"></div>
+        <div class="line-y"></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,9 +79,23 @@ export default {
   position: relative;
 
   .main-box {
-    background-color: aqua;
+    background-color: #ffffff;
+    position: relative;
     // position: absolute;
     // z-index: 1;
+
+    .line-box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      top: 0px;
+      left: 0px;
+      transform: rotate(0deg);
+      transform-origin: left top;
+      border: 1px solid #ff3366;
+    }
   }
 }
 </style>
