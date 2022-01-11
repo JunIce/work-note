@@ -9,11 +9,10 @@
         <div class="chat-wrapper">
           <div class="chat-side-box">
             <ul v-if="userList.length > 0" class="chat-list">
-              <template v-for="item in userList">
+              <template v-for="item in userList" :key="item.id">
                 <li
                   class="chat-list-item"
                   :class="currentSelectedUserId == item.id ? 'active' : ''"
-                  :key="item.id"
                   @click="chatToUser(item)"
                 >
                   <div class="avatar-box">
@@ -39,10 +38,9 @@
               <section class="chat-room">
                 <section class="message-box-wrapper">
                   <div class="message-box" ref="messageBoxRef">
-                    <template v-for="item in list">
+                    <template v-for="item in list" :key="item.id">
                       <MessageItem
                         :item="item"
-                        :key="item.id"
                         :fromUserId="fromId"
                         :toUserId="currentSelectedUserId"
                       />
@@ -51,9 +49,8 @@
                   <div class="chat-message-tip">底部提示文字</div>
                 </section>
                 <section class="chat-tab-menu">
-                  <template v-for="(m, idx) in tabMenus">
+                  <template v-for="(m, idx) in tabMenus" :key="idx">
                     <div
-                      :key="idx"
                       class="icon-menu"
                       @click="onTabMenuClick(m)"
                       v-popover:[m.ref]
@@ -72,8 +69,8 @@
                   >
                     <div class="popper-emoji-container">
                       <ul @click="insertEmojiToMsg">
-                        <template v-for="(e, idx) in emojiList">
-                          <li :key="idx" data-attr="emoji">{{ e.char }}</li>
+                        <template v-for="(e, idx) in emojiList" :key="idx">
+                          <li  data-attr="emoji">{{ e.char }}</li>
                         </template>
                       </ul>
                     </div>
@@ -86,8 +83,8 @@
                   >
                     <div class="popper-common-sentence-container">
                       <ul>
-                        <template v-for="(s, idx) in commonSentenceList">
-                          <li :key="idx">{{ s }}</li>
+                        <template v-for="(s, idx) in commonSentenceList" :key="idx">
+                          <li >{{ s }}</li>
                         </template>
                       </ul>
                     </div>

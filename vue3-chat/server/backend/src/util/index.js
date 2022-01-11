@@ -28,7 +28,7 @@ function parseAction({ action, ...rest }, ctx) {
         break;
 
         case ACTION_TYPE.MESSAGE:
-            const { fromId, toId } = rest.chatMsg;
+            const { toId } = rest.chatMsg;
             // 在线
             if(userOnlineIds.has(toId)) {
                 let socket = userOnlineMap.get(toId);
