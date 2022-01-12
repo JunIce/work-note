@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .position {
+        margin-top: 300px;
+        margin-left: 500px;
+      }
+
+      .select-input {
+        display: inline-block;
+        position: relative;
+        height: 40px;
+      }
+
+      .select-input_inner {
+        padding: 10px 12px;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        min-width: 240px;
+        box-sizing: border-box;
+      }
+
+      .select-input.focus .select-input_inner {
+        border-color: #409eff;
+      }
+
+      .dropdown-list {
+        list-style: none;
+        padding: 6px 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      .dropdown-item {
+        font-size: 14px;
+        padding: 0 20px;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #606266;
+        height: 34px;
+        line-height: 34px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .dropdown-item:hover {
+        background-color: #f5f7fa;
+      }
+
+      .dropdown {
+        min-width: 240px;
+        transform-origin: center top;
+        z-index: 2090;
+        position: absolute;
+        display: none;
+
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+        box-sizing: border-box;
+        margin: 5px 0;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="height: 3000px">
+      <div class="select position">
+        <div class="select-input">
+          <input class="select-input_inner" type="text" readonly value="测试" />
+        </div>
+
+        <div class="dropdown">
+          <div class="dropdown-wrapper">
+            <ul class="dropdown-list">
+              <li class="dropdown-item">黄金糕</li>
+              <li class="dropdown-item">黄金糕</li>
+              <li class="dropdown-item">黄金糕</li>
+              <li class="dropdown-item">黄金糕</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let selectWrapper = document.querySelector(".select-input");
+      let dropdown = document.querySelector(".dropdown");
+      selectWrapper.addEventListener(
+        "click",
+        function (e) {
+          let target = e.currentTarget;
+          let rect = target.getBoundingClientRect();
+          let isFocused = target.className.indexOf("focus") > -1;
+          if (isFocused) {
+            target.classList.remove("focus");
+            dropdown.style.left = `-999px`;
+            dropdown.style.top = `-999px`;
+            dropdown.style.display = "none";
+          } else {
+            target.classList.add("focus");
+            dropdown.style.left = `${rect.left}px`;
+            dropdown.style.top = `${rect.top + rect.height}px`;
+            dropdown.style.display = "block";
+          }
+        },
+        {
+          passive: false,
+        }
+      );
+
+      let list = document.querySelector('.dropdown-list')
+      list.addEventListener("click", function(e) {
+        
+      }, {
+          passive: false
+      })
+    </script>
+  </body>
+</html>
