@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>事件冒泡 && 事件捕获 && 事件目标阶段</title>
+  </head>
+  <body>
+    <div>
+      <button>
+        <p>点击冒泡</p>
+      </button>
+    </div>
+
+    <pre>
+      let count = 0;
+      function pClick() {
+        console.log("p标签被点击");
+      }
+      function btnClick() {
+        console.log("button被点击: ", ++count);
+      }
+      function btnClickBubble() {
+        console.log("bubble function button被点击: ", ++count);
+      }
+      function btnClickTarget() {
+        console.log("target function button被点击: ", ++count);
+      }
+      function btnClickCaptcure() {
+        console.log("captcure function button被点击: ", ++count);
+      }
+      function btnClick() {
+        console.log("button被点击: ", ++count);
+      }
+      function divClick(event) {
+        console.log("div被点击");
+      }
+      function bodyClick() {
+        console.log("body被点击");
+      }
+
+      let body = document.querySelector("body");
+      let div = document.querySelector("div");
+      let button = document.querySelector("button");
+      let p = document.querySelector("p");
+    </pre>
+
+    <pre>
+      // 冒泡
+      body.addEventListener('click', bodyClick, false)
+      div.addEventListener('click', divClick, false)
+      button.addEventListener('click', btnClick, false)
+      p.addEventListener('click', pClick, false)
+    </pre>
+
+    <pre>
+      // 捕获
+      body.addEventListener('click', bodyClick, true)
+      div.addEventListener('click', divClick, true)
+      button.addEventListener('click', btnClick, true)
+      p.addEventListener('click', pClick, true)
+    </pre>
+
+    <pre>
+      // 事件目标阶段
+      button.addEventListener("click", btnClickBubble, false);
+      button.onclick = btnClickTarget;
+      button.addEventListener("click", btnClickCaptcure, true);
+    </pre>
+
+    <script>
+      let count = 0;
+      function pClick() {
+        console.log("p标签被点击");
+      }
+      function btnClick() {
+        console.log("button被点击: ", ++count);
+      }
+      function btnClickBubble() {
+        console.log("bubble function button被点击: ", ++count);
+      }
+      function btnClickTarget() {
+        console.log("target function button被点击: ", ++count);
+      }
+      function btnClickCaptcure() {
+        console.log("captcure function button被点击: ", ++count);
+      }
+      function btnClick() {
+        console.log("button被点击: ", ++count);
+      }
+      function divClick(event) {
+        console.log("div被点击");
+      }
+      function bodyClick() {
+        console.log("body被点击");
+      }
+
+      let body = document.querySelector("body");
+      let div = document.querySelector("div");
+      let button = document.querySelector("button");
+      let p = document.querySelector("p");
+
+      // 冒泡
+      // body.addEventListener('click', bodyClick, false)
+      // div.addEventListener('click', divClick, false)
+      // button.addEventListener('click', btnClick, false)
+      // p.addEventListener('click', pClick, false)
+
+      // 捕获
+      // body.addEventListener('click', bodyClick, true)
+      // div.addEventListener('click', divClick, true)
+      // button.addEventListener('click', btnClick, true)
+      // p.addEventListener('click', pClick, true)
+
+      // 事件目标阶段
+      button.addEventListener("click", btnClickBubble, false);
+      button.onclick = btnClickTarget;
+      button.addEventListener("click", btnClickCaptcure, true);
+    </script>
+  </body>
+</html>
