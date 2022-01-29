@@ -62,7 +62,6 @@ export default {
 
     return {
       style,
-      // events
       onMouseDown,
       onMouseUp,
       onMouseMove,
