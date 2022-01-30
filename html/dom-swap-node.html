@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div>
+        
+        <h1 class="node2">Node2</h1>
+        <h2>node</h2>
+        <h1 class="node1">Node1</h1>
+    </div>
+
+    <script>
+        var el1 = document.querySelector(".node1")
+        var el2 = document.querySelector(".node2")
+        function swap(ele1, ele2) {
+            let temp = document.createElement("div")
+            temp.textContent = "temp"
+            let parent = ele1.parentNode
+
+
+            parent.insertBefore(temp, el1)
+            parent.insertBefore(el1, el2)
+            parent.insertBefore(el2, temp)
+
+            parent.removeChild(temp)
+
+
+        }
+
+        swap(el1, el2)
+
+    </script>
+</body>
+</html>
