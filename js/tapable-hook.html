@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let taps = [
+            {
+                name: 'a',
+                stage: 1,
+            },
+            {
+                name: 'b',
+                stage: 2,
+            },
+            {
+                name: 'c',
+                stage: 4,
+            }
+        ]
+
+        let item = {
+            before: [ "c"],
+            stage: 3,
+            name: 'coming',
+        }
+
+
+        // before 转成Set数据， 方便使用Set的API
+        let before;
+        if (typeof item.before === "string") {
+            before = new Set([item.before]);
+        } else if (Array.isArray(item.before)) {
+            before = new Set(item.before);
+        }
+
+        // stage 其实是执行时机
+        let stage = 0;
+        if (typeof item.stage === "number") {
+            stage = item.stage;
+        }
+
+
+        let i = taps.length;
+        while (i > 0) {
+            i--;
+            const x = taps[i]; // 最后一个tap
+            taps[i + 1] = x; // 复制最后一个tap到下标i+1
+            const xStage = x.stage || 0; // 拿到x的stage
+
+            if (before) { // 存在before， 进入
+                if (before.has(x.name)) {
+                    before.delete(x.name); // 删除
+                    continue; // 重新走循环
+                }
+                if (before.size > 0) {
+                    continue; // 存在几个before就走几遍
+                }
+            }
+            if (xStage > stage) {
+                continue;
+            }
+            i++; // 指针后移一位，插入到i后面
+            break;
+        }
+
+        taps[i] = item; // 最终赋值
+    </script>
+</body>
+
+</html>
