@@ -1,0 +1,280 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="initial-scale=1,maximum-scale=1,user-scalable=no"
+        />
+        <title>
+            Add or remove graphics from a FeatureLayer | Sample | ArcGIS API for
+            JavaScript 4.22
+        </title>
+
+        <link
+            rel="stylesheet"
+            href="https://js.arcgis.com/4.22/esri/themes/light/main.css"
+        />
+        <script src="https://js.arcgis.com/4.22/"></script>
+        <style>
+            html,
+            body,
+            #viewDiv {
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+            }
+            #add {
+                margin-bottom: 5px;
+            }
+            #actions {
+                padding: 5px;
+            }
+            button:disabled {
+                opacity: 0.4;
+                -moz-opacity: 0.4; /* Firefox and Mozilla browsers */
+                -webkit-opacity: 0.4; /* Safari */
+                cursor: default;
+            }
+        </style>
+
+        <script>
+            require([
+                "esri/Map",
+                "esri/views/MapView",
+                "esri/Basemap",
+                "esri/layers/VectorTileLayer",
+                "esri/layers/FeatureLayer",
+                "esri/Graphic",
+                "esri/widgets/Legend",
+            ], (
+                Map,
+                MapView,
+                Basemap,
+                VectorTileLayer,
+                FeatureLayer,
+                Graphic,
+                Legend
+            ) => {
+                // create map using custom basemap from ArcGIS Online
+                const map = new Map({
+                    basemap: new Basemap({
+                        baseLayers: [
+                            new VectorTileLayer({
+                                portalItem: {
+                                    id: "474f0cb226884dd68f707ab0f2f1aa10",
+                                },
+                            }),
+                        ],
+                        referenceLayers: [
+                            new VectorTileLayer({
+                                portalItem: {
+                                    id: "1768e8369a214dfab4e2167d5c5f2454",
+                                },
+                            }),
+                        ],
+                    }),
+                });
+
+                const view = new MapView({
+                    container: "viewDiv",
+                    map: map,
+                    zoom: 5,
+                    center: [-122.18, 37.49], // longitude, latitude
+                });
+
+                // create empty FeatureLayer
+                const monumentLayer = new FeatureLayer({
+                    // create an instance of esri/layers/support/Field for each field object
+                    title: "National Monuments",
+                    fields: [
+                        {
+                            name: "ObjectID",
+                            alias: "ObjectID",
+                            type: "oid",
+                        },
+                        {
+                            name: "Name",
+                            alias: "Name",
+                            type: "string",
+                        },
+                        {
+                            name: "Type",
+                            alias: "Type",
+                            type: "string",
+                        },
+                    ],
+                    objectIdField: "ObjectID",
+                    geometryType: "point",
+                    spatialReference: { wkid: 4326 },
+                    source: [], // adding an empty feature collection
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "web-style", // autocasts as new WebStyleSymbol()
+                            styleName: "Esri2DPointSymbolsStyle",
+                            name: "landmark",
+                        },
+                    },
+                    popupTemplate: {
+                        title: "{Name}",
+                    },
+                });
+                map.add(monumentLayer);
+
+                // add buttons to the mapView
+                view.ui.add(document.getElementById("actions"), "top-right");
+
+                const addBtn = document.getElementById("add");
+                const removeBtn = document.getElementById("remove");
+
+                addBtn.addEventListener("click", addFeatures);
+                removeBtn.addEventListener("click", removeFeatures);
+
+                // check if features have already been added to determine disabled state of buttons
+                monumentLayer.queryFeatures().then((results) => {
+                    if (results.features.length === 0) {
+                        addBtn.disabled = false;
+                        removeBtn.disabled = true;
+                    } else {
+                        addBtn.disabled = true;
+                        removeBtn.disabled = false;
+                    }
+                });
+
+                // fires when "Add Features" button is clicked
+                function addFeatures() {
+                    // data to be added to the map
+                    const data = [
+                        {
+                            LATITUDE: 32.6735,
+                            LONGITUDE: -117.2425,
+                            TYPE: "National Monument",
+                            NAME: "Cabrillo National Monument",
+                        },
+                        {
+                            LATITUDE: 35.2234,
+                            LONGITUDE: -118.559,
+                            TYPE: "National Monument",
+                            NAME: "Cesar E. Chavez National Monument",
+                        },
+                        {
+                            LATITUDE: 37.6251,
+                            LONGITUDE: -119.085,
+                            TYPE: "National Monument",
+                            NAME: "Devils Postpile National Monument",
+                        },
+                        {
+                            LATITUDE: 35.2915,
+                            LONGITUDE: -115.0935,
+                            TYPE: "National Monument",
+                            NAME: "Castle Mountains National Monument",
+                        },
+                        {
+                            LATITUDE: 41.7588,
+                            LONGITUDE: -121.5267,
+                            TYPE: "National Monument",
+                            NAME: "Lava Beds National Monument",
+                        },
+                        {
+                            LATITUDE: 37.897,
+                            LONGITUDE: -122.5811,
+                            TYPE: "National Monument",
+                            NAME: "Muir Woods National Monument",
+                        },
+                        {
+                            LATITUDE: 41.8868,
+                            LONGITUDE: -121.3717,
+                            TYPE: "National Monument",
+                            NAME: "Tule Lake National Monument",
+                        },
+                    ];
+
+                    // create an array of graphics based on the data above
+                    var graphics = [];
+                    var graphic;
+                    for (var i = 0; i < data.length; i++) {
+                        graphic = new Graphic({
+                            geometry: {
+                                type: "point",
+                                latitude: data[i].LATITUDE,
+                                longitude: data[i].LONGITUDE,
+                            },
+                            attributes: data[i],
+                        });
+                        graphics.push(graphic);
+                    }
+
+                    // addEdits object tells applyEdits that you want to add the features
+                    const addEdits = {
+                        addFeatures: graphics,
+                    };
+
+                    // apply the edits to the layer
+                    applyEditsToLayer(addEdits);
+                }
+
+                // fires when "Remove Features" button clicked
+                function removeFeatures() {
+                    // query for the features you want to remove
+                    monumentLayer.queryFeatures().then((results) => {
+                        // edits object tells apply edits that you want to delete the features
+                        const deleteEdits = {
+                            deleteFeatures: results.features,
+                        };
+                        // apply edits to the layer
+                        applyEditsToLayer(deleteEdits);
+                    });
+                }
+
+                function applyEditsToLayer(edits) {
+                    monumentLayer
+                        .applyEdits(edits)
+                        .then((results) => {
+                            // if edits were removed
+                            if (results.deleteFeatureResults.length > 0) {
+                                console.log(
+                                    results.deleteFeatureResults.length,
+                                    "features have been removed"
+                                );
+                                addBtn.disabled = false;
+                                removeBtn.disabled = true;
+                            }
+                            // if features were added - call queryFeatures to return
+                            //    newly added graphics
+                            if (results.addFeatureResults.length > 0) {
+                                var objectIds = [];
+                                results.addFeatureResults.forEach((item) => {
+                                    objectIds.push(item.objectId);
+                                });
+                                // query the newly added features from the layer
+                                monumentLayer
+                                    .queryFeatures({
+                                        objectIds: objectIds,
+                                    })
+                                    .then((results) => {
+                                        console.log(
+                                            results.features.length,
+                                            "features have been added."
+                                        );
+                                        addBtn.disabled = true;
+                                        removeBtn.disabled = false;
+                                    });
+                            }
+                        })
+                        .catch((error) => {
+                            console.error();
+                        });
+                }
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="viewDiv"></div>
+        <div id="actions" class="esri-widget">
+            <button class="esri-button" id="add">Add 7 Features</button>
+            <button class="esri-button" id="remove">Remove 7 Features</button>
+        </div>
+    </body>
+</html>
