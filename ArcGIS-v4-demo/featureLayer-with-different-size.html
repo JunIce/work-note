@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>ArcGIS DEMO V4</title>
+    <style>
+        html,
+        body,
+        #map {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .panel {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            z-index: 10;
+        }
+    </style>
+    <script src="./js/lodash.js"></script>
+    <script src="./js/jquery.js"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.21/"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        var expdate = new Date();
+        expdate.setTime(expdate.getTime() + 30 * 60 * 1000);
+        document.cookie = "loginName=psgwyxgs" + ";path=/";
+    </script>
+
+    <script>
+        require(["esri/Basemap", "esri/layers/TileLayer", "esri/layers/FeatureLayer", "esri/Map", "esri/views/MapView", "esri/views/SceneView", "esri/layers/GraphicsLayer", "esri/Graphic", "esri/geometry/Point", "esri/geometry/Polyline", "esri/symbols/PictureMarkerSymbol", "esri/symbols/TextSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/Font", "esri/Color", "esri/geometry/Extent", "esri/geometry/SpatialReference",
+            "esri/layers/support/Field",
+            "esri/request",
+            "esri/renderers/smartMapping/creators/location",
+        ], function (
+            Basemap,
+            TileLayer,
+            FeatureLayer,
+
+            Map,
+            MapView,
+            SceneView,
+            GraphicsLayer,
+            Graphic,
+            Point,
+            Polyline,
+
+            PictureMarkerSymbol,
+            TextSymbol,
+            SimpleLineSymbol,
+
+            Font,
+            Color,
+            Extent,
+            SpatialReference,
+
+            Field,
+            esriRequest,
+            locationRendererCreator
+        ) {
+
+            let url =
+                "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetWarm/MapServer"
+
+            const layer = new TileLayer({
+                url: url
+            });
+            const customBasemap = new Basemap({
+                baseLayers: [layer],
+                title: "My Basemap"
+            });
+            const myMap = new Map({
+                basemap: customBasemap,
+            });
+
+            const view = new MapView({
+                container: "map",
+                map: myMap,
+                center: [120.82, 32.03],
+                zoom: 15,
+            });
+
+
+            view.when(function () {
+
+
+                getData()
+                    .then(({ points, lines }) => {
+                        return {
+                            points: points.map(point => _generatePoint(point))
+                        }
+                    })
+                    .then(({ points, lines }) => {
+                        addPoint(points)
+                    })
+            })
+
+
+            const pointLabel = {  // autocasts as new LabelClass()
+                symbol: {
+                    type: "text",  // autocasts as new TextSymbol()
+                    color: "white",
+                    haloColor: "blue",
+                    haloSize: 1,
+                    font: {  // autocast as new Font()
+                        family: "Ubuntu Mono",
+                        size: 14,
+                        weight: "bold"
+                    }
+                },
+                labelPlacement: "above-right",
+                labelExpressionInfo: {
+                    expression: "$feature.Team + TextFormatting.NewLine + $feature.Division"
+                },
+            };
+
+
+            function addPoint(graphics) {
+                let flayer = new FeatureLayer({
+                    id: 'pointLayer',
+                    source: graphics, // autocast as an array of esri/Graphic
+                    geometryType: "point",
+                    fields: [
+                        new Field({
+                            name: "ObjectID",
+                            alias: "ObjectID",
+                            type: "oid"
+                        }),
+                        new Field({
+                            name: "Subsid",
+                            alias: "Subsid",
+                            type: "string"
+                        })
+                    ],
+                    outFields: ["*"],
+                    labelingInfo: [pointLabel],
+                    renderer: {
+                        type: "unique-value",
+                        field: "Subsid",
+                        defaultSymbol: { type: "simple-fill" },
+                        uniqueValueInfos: [
+                            {
+                                value: "窨井",
+                                symbol: {
+                                    type: "picture-marker",
+                                    url: "./images/1.png",
+                                    width: "20px",
+                                    height: "20px"
+                                }
+                            }, {
+                                value: "阀门",
+                                symbol: {
+                                    type: "picture-marker",
+                                    url: "./images/2.png",
+                                    width: "20px",
+                                    height: "20px"
+                                }
+                            }
+                        ],
+                        visualVariables: [
+                            {
+                                type: "size",
+                                field: "Subsid",
+                                minDataValue: 500000,
+                                maxDataValue: 33000000,
+                                // minimum size to render minDataVal at specified view scales
+                                minSize: {
+                                    type: "size",
+                                    valueExpression: "$view.scale",
+                                    stops: [
+                                        { value: 1128, size: 12 },  // smallest marker will be 12pt at 1:1128 scale
+                                        { value: 288895, size: 12 },
+                                        { value: 73957191, size: 7 },
+                                        { value: 591657528, size: 1.5 }  // smallest marker will be 1.5pt at 1:591657528 scale
+                                    ]
+                                },
+                                // maximum size to render maxDataVal at specified view scales
+                                maxSize: {
+                                    type: "size",
+                                    valueExpression: "$view.scale",
+                                    stops: [
+                                        { value: 1128, size: 60 },  // largest marker will be 60pt at 1:1128 scale
+                                        { value: 288895, size: 60 },
+                                        { value: 73957191, size: 37 },
+                                        { value: 591657528, size: 19 }  // largest marker will be 19pt at 1:591657528 scale
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                });
+
+                myMap.add(flayer);
+
+
+
+
+                return flayer;
+            }
+
+
+
+            function _generatePoint(item) {
+                var pt = new Point({
+                    latitude: item.X,
+                    longitude: item.Y,
+                });
+
+                return {
+                    geometry: pt,
+                    attributes: {
+                        text: item.Exp_No,
+                        Subsid: item.Subsid,
+                        color: new Color([18, 150, 219, 1])
+                    }
+                };
+            }
+
+
+
+
+            $("#recenter").click(function () {
+                view.goTo({
+                    center: [120.82, 32.03]
+                })
+            });
+
+
+
+            function getData() {
+                return esriRequest("./js/data.json", {
+                    responseType: "json"
+                }).then(res => {
+                    let lines = [];
+                    let points = [];
+
+                    _.forEach(res.data, (item) => {
+                        let { E_GEO, S_GEO } = item;
+                        points = [...points, S_GEO, E_GEO];
+
+                        lines.push([[S_GEO.Y, S_GEO.X], [E_GEO.Y, E_GEO.X]]);
+                    });
+
+                    return {
+                        points,
+                        lines
+                    }
+                })
+            }
+        });
+    </script>
+</body>
+
+</html>

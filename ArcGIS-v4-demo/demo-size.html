@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Vary point sizes by scale - 4.14</title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.14/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.14/"></script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="infoDiv" class="esri-widget">
+      <button id="toggle-auto-size" class="esri-button">
+        Enable auto size by scale
+      </button>
+    </div>
+    <div id="scaleInfo">
+      <div id="scaleDiv">View scale: <span id="viewScale"></span></div>
+      <div id="sizeDiv">Icon size (pt): <span id="size"></span></div>
+      <div id="codeDiv"></div>
+    </div>
+  </body>
+</html>
