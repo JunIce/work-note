@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container">
+        <h1>test</h1>
+
+        <h2>test2</h2>
+    </div>
+
+    <script>
+
+        var h1 = document.querySelector('h1')
+        var container = document.querySelector('#container')
+
+        var span = document.createElement("span")
+        span.textContent = 'demo span'
+
+        h1.after(span)
+
+        var spanBefore = document.createElement("span")
+        spanBefore.textContent = 'spanBebore'
+
+        span.before(spanBefore)
+
+    </script>
+
+
+    <script>
+
+        let span2 = document.createElement('span')
+        span2.textContent = 'span2'
+
+        container.append(span2)
+        console.log(container.children)
+
+    </script>
+</body>
+</html>
