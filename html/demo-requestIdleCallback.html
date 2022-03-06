@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+
+        function work(deadline) {
+            if(deadline.timeRemaining() > 0) {
+                console.log('timeRemaining:', deadline.timeRemaining())
+                doWork()
+            }
+
+            if(job.length > 0) {
+                window.requestIdleCallback(work)
+            }
+        }
+
+        function doWork() {
+            let cb = job.shift()
+            cb()
+        }
+
+
+
+        let job = [
+            () => {
+                console.log('done job 1')
+            },
+            () => {
+                console.log('done job 2')
+            },
+            () => {
+                console.log('done job 3')
+            },
+            () => {
+                console.log('done job 4')
+            },
+            () => {
+                console.log('done job 5')
+            },
+            () => {
+                console.log('done job 6')
+            },
+        ]
+
+
+
+        window.requestIdleCallback(work)
+
+    </script>
+</body>
+</html>
