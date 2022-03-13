@@ -1,0 +1,104 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_global\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  D:\app\ihaiking\product\11.2.0\client_2\bin;D:\app\ihaiking\product\11.2.0\client_1;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\node_global;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;c:\Program Files (x86)\Oracle;D:\app\ihaiking\product\11.2.0;C:\Users\ihaiking\.cargo\bin;C:\Users\ihaiking\AppData\Local\Microsoft\WindowsApps;C:\Users\ihaiking\AppData\Local\Programs\Microsoft VS Code\bin;
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  14.19.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile 'C:\Users\ihaiking\AppData\Local\Yarn\Cache\v6\npm-ansi-styles-3.2.1-41fbb20243e50b12be0f04b8dedbf07520ce841d-integrity\node_modules\ansi-styles\index.js' -> 'D:\workspace\demo\blog\demo\work-note\vite-vue3-demo\node_modules\vue-jest\node_modules\ansi-styles\index.js'
+
+npm manifest: 
+  {
+    "name": "vite-vue3-starter",
+    "version": "0.0.1",
+    "private": false,
+    "description": "A Vite2.x + Vue3 + TypeScript template starter",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "build-tsc": "vue-tsc --noEmit && vite build",
+      "serve": "vite preview",
+      "format": "prettier --write ./src",
+      "lint": "eslint ./src --ext .vue,.js,.ts",
+      "lint-fix": "eslint --fix ./src --ext .vue,.js,.ts",
+      "prepare": "husky install",
+      "test": "jest"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/XPoet/vite-vue3-starter.git"
+    },
+    "keywords": [
+      "Vite",
+      "Vue3",
+      "TypeScript",
+      "Starter"
+    ],
+    "author": "XPoet",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/XPoet/vite-vue3-starter/issues"
+    },
+    "homepage": "https://github.com/XPoet/vite-vue3-starter#readme",
+    "lint-staged": {
+      "*.{vue,js,ts}": "eslint --fix"
+    },
+    "config": {
+      "commitizen": {
+        "path": "./node_modules/cz-customizable"
+      }
+    },
+    "dependencies": {
+      "axios": "^0.21.1",
+      "element-plus": "^1.1.0-beta.7",
+      "vue": "^3.2.6",
+      "vue-router": "^4.0.11",
+      "vuex": "^4.0.2"
+    },
+    "devDependencies": {
+      "@commitlint/cli": "^12.1.1",
+      "@commitlint/config-conventional": "^12.1.1",
+      "@types/jest": "^26.0.22",
+      "@typescript-eslint/eslint-plugin": "^4.21.0",
+      "@typescript-eslint/parser": "^4.21.0",
+      "@vitejs/plugin-vue": "^1.6.0",
+      "@vue/compiler-sfc": "^3.2.6",
+      "@vue/test-utils": "^2.0.0-rc.4",
+      "commitizen": "^4.2.3",
+      "cz-conventional-changelog": "^3.3.0",
+      "cz-customizable": "^6.3.0",
+      "eslint": "^7.24.0",
+      "eslint-config-airbnb-base": "^14.2.1",
+      "eslint-config-prettier": "^8.1.0",
+      "eslint-plugin-import": "^2.22.1",
+      "eslint-plugin-jest": "^24.3.5",
+      "eslint-plugin-prettier": "^3.3.1",
+      "eslint-plugin-vue": "^7.8.0",
+      "husky": "^6.0.0",
+      "jest": "^26.6.3",
+      "lint-staged": "^10.5.4",
+      "prettier": "^2.2.1",
+      "stylus": "^0.54.8",
+      "ts-jest": "^26.5.4",
+      "typescript": "^4.1.3",
+      "vite": "^2.5.1",
+      "vite-plugin-element-plus": "0.0.12",
+      "vue-jest": "^5.0.0-alpha.7",
+      "vue-tsc": "^0.3.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
