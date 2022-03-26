@@ -1,7 +1,5 @@
 <template>
   <div class="home-container page-container">
-    <img class="vue-element-plus-logo" alt="Vue logo" src="../assets/logo.png" />
-    <div class="page-title">Vite2.x + Vue3.x + TypeScript + Element Plus</div>
     {{count}}
 
     <!-- <Child name="childName"></Child> -->
@@ -15,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { defineComponent, onMounted, ref, watch, effect, stop, reactive } from 'vue'
 import Child from "./Child.vue"
 import Child2 from "./Child2.vue"
 import Child3 from "./Child3.vue"
@@ -36,12 +34,50 @@ export default defineComponent({
 
     const child2Value = ref('1')
 
+    effect(() => {
+      console.log(1)
+    })
+
+    let c = effect(() => {
+      console.log(2, count.value)
+    }, {
+      lazy: true,
+      onStop: () => {
+        console.log('stop cb')
+      }
+    })
+
+    
+    const state = reactive({num1: 0, num2: 0})
+
+    let d = 0
+    let countc = 0
+    
+    effect(() => {
+      d = state.num1 + state.num1 + state.num2
+      console.log(d)
+      countc++
+      console.log("run times: ", countc)
+    })
+
+
+
     onMounted(() => {
       console.log(btnRef.value)
+
+      setTimeout(() => {
+        c()
+      }, 3000)
+
+      setTimeout(() => {
+        stop(c)
+      }, 5000)
     })
 
     const onIncrease = () => count.value++
-    const onDecrease = () => count.value--
+    const onDecrease = () => {
+      state.num2 = state.num1 = 7
+    }
 
     watch(child2Value, () => {
       console.log('change value:', child2Value.value)
