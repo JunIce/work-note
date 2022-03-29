@@ -5,7 +5,8 @@
     <!-- <Child name="childName"></Child> -->
     <!-- <Child3 id="child3" class="child3-demo"></Child3> -->
     <!-- <Child2 :modelValue="child2Value" @update:modelValue="child2Value = $event"></Child2> -->
-    <Child4 :list="list"></Child4>
+    <!-- <Child4 :list="list"></Child4> -->
+    <Child5></Child5>
 
     <button ref="btnRef" @click="onIncrease">increase</button>
     <button @click="onDecrease">decrease</button>
@@ -18,6 +19,7 @@ import Child from "./Child.vue"
 import Child2 from "./Child2.vue"
 import Child3 from "./Child3.vue"
 import Child4 from "./Child4.vue"
+import Child5 from "./Child5.ts"
 
 export default defineComponent({
   name: 'Home',
@@ -25,7 +27,8 @@ export default defineComponent({
     Child,
     Child2,
     Child3,
-    Child4
+    Child4,
+    Child5
   },
   setup() {
 
