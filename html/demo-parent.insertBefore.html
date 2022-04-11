@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app {
+            width: 200px;
+            height: 200px;
+            background-color: rgb(119, 78, 216);
+        }
+
+        .container {
+            width: 200px;
+            height: 200px;
+            background-color: aqua;
+        }
+
+        .insert-text {
+            color: #fff;
+            font-size: 30px;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+    </div>
+
+    <div class="container">
+
+    </div>
+
+    <button id="button">toggle</button>
+
+    <script type="module">
+        const btn = document.querySelector("#button")
+        const app = document.querySelector('#app')
+        const container = document.querySelector('.container')
+
+        const span = document.createElement('div')
+        span.className="insert-text"
+
+        const video = document.createElement('video')
+        video.src = "./516336638-1-208.mp4"
+        video.autoplay = true
+        video.controls = true
+
+        span.appendChild(video)
+
+        btn.addEventListener('click', () => {
+            if(app.contains(span)) {
+                insert(container, span, container.lastChild)
+            } else {
+                insert(app, span, app.lastChild)
+            }
+        }, false)
+
+
+        function insert(parent, node, reference) {
+            parent.insertBefore(node, reference)
+        }
+    </script>
+</body>
+</html>
