@@ -1,6 +1,6 @@
 <template>
   <div class="home-container page-container">
-    {{count}}
+    {{ count }}
 
     <!-- <Child name="childName"></Child> -->
     <!-- <Child3 id="child3" class="child3-demo"></Child3> -->
@@ -15,11 +15,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch, effect, stop, reactive } from 'vue'
-import Child from "./Child.vue"
-import Child2 from "./Child2.vue"
-import Child3 from "./Child3.vue"
-import Child4 from "./Child4.vue"
-import Child5 from "./Child5.ts"
+import Child from './Child.vue'
+import Child2 from './Child2.vue'
+import Child3 from './Child3.vue'
+import Child4 from './Child4.vue'
+import Child5 from './Child5.ts'
 
 export default defineComponent({
   name: 'Home',
@@ -31,7 +31,6 @@ export default defineComponent({
     Child5
   },
   setup() {
-
     const count = ref(0)
     const btnRef = ref(null)
 
@@ -41,29 +40,29 @@ export default defineComponent({
       console.log(1)
     })
 
-    let c = effect(() => {
-      console.log(2, count.value)
-    }, {
-      lazy: true,
-      onStop: () => {
-        console.log('stop cb')
+    const c = effect(
+      () => {
+        console.log(2, count.value)
+      },
+      {
+        lazy: true,
+        onStop: () => {
+          console.log('stop cb')
+        }
       }
-    })
+    )
 
-    
-    const state = reactive({num1: 0, num2: 0})
+    const state = reactive({ num1: 0, num2: 0 })
 
     let d = 0
     let countc = 0
-    
+
     effect(() => {
       d = state.num1 + state.num1 + state.num2
       console.log(d)
       countc++
-      console.log("run times: ", countc)
+      console.log('run times: ', countc)
     })
-
-
 
     onMounted(() => {
       console.log(btnRef.value)
