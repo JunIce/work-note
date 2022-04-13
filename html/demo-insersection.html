@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            width: 800px;
+        }
+
+        .container {
+            width: 600px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .insert-text {
+            color: #fff;
+            font-size: 30px;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="height: 2000px; position: absolute; top: 0; right: 0; width: 1px;"></div>
+    <div id="app">
+        <video id="videoRef" src="./516336638-1-208.mp4" controls></video>
+    </div>
+    <div class="container"></div>
+
+    <script type="module">
+        const btn = document.querySelector("#button")
+        const app = document.querySelector('#app')
+        const container = document.querySelector('.container')
+        const videoRef = document.querySelector('#videoRef')
+
+        const anchorApp = document.createComment("")
+        app.appendChild(anchorApp)
+
+        const anchorContainer = document.createComment("")
+        container.appendChild(anchorContainer)
+
+
+
+        function insert(parent, node, reference) {
+            parent.insertBefore(node, reference)
+        }
+
+        const observe = new IntersectionObserver((data) => {
+            let visible = data[0].isIntersecting
+            if (visible) {
+                insert(app, videoRef, anchorApp)
+            } else {
+                insert(container, videoRef, anchorContainer)
+            }
+        })
+
+        observe.observe(app)
+    </script>
+</body>
+
+</html>
