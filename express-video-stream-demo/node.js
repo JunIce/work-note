@@ -27,14 +27,19 @@ try {
     .then(fileList => {
       console.log(fileList)
 
-      let writeStream = fs.createWriteStream(path.resolve(UPLOAD_PATH, `${tempDirname}`))
+      let writeStream = fs.createWriteStream(path.resolve(UPLOAD_PATH, `${tempDirname}`), {
+        highWaterMark: 64 * 1024
+      })
 
       let i = 0
       while( i < fileList.length ) {
         let ftemp = fs.createReadStream(fileList[i])
         ftemp.pipe(writeStream)
+        ftemp.end()
         i++
       }
+
+      writeStream.end()
 
     })
 } catch (error) {
