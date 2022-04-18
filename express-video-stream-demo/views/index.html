@@ -14,9 +14,15 @@
       <button id="videoBtn">播放</button>
     </div>
 
+
+    <div>
+      <input type="file" id="file">
+    </div>
+
     <script>
 
       const video = document.querySelector('#video')
+      const input = document.querySelector('#file')
 
       function getVideo() {
         const mediaSource = new MediaSource()
@@ -39,6 +45,60 @@
       btn.addEventListener("click", function () {
         getVideo();
       });
+
+
+
+
+
+      input.addEventListener('change', e => {
+        let files = e.target.files
+        if(files) {
+          let chunks = createFileChunks(files[0])
+
+          chunks.forEach(chunk => {
+            let formData = new FormData()
+            formData.append('file', chunk.file)
+            formData.append('filename', chunk.filename)
+
+
+            fetch('/upload', {
+              method: 'post',
+              body: formData
+            })
+
+          })
+
+        }
+      })
+
+
+
+      function createFileChunks(file, chunkSize = 20) {
+        let chunks = []
+        let start = 0
+        let i = 0
+
+        let size = Math.ceil(file.size / 30)
+
+        while(start < file.size) {
+          chunks.push({
+            filename: `${++i}_${file.name}`,
+            file: new File([file.slice(start, (start = start + size))], `${++i}_${file.name}`)
+          })
+        }
+        return chunks
+      }
+
+
+      const req = {
+        post: (url, formData) => {
+          return fetch({
+            url,
+            method: 'post',
+            body: formData
+          })
+        }
+      }
     </script>
   </body>
 </html>

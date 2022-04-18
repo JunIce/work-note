@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path")
 const express = require("express");
+const busboy = require("busboy")
 
 const app = express();
 
@@ -40,6 +41,56 @@ app.get("/video", (req, res) => {
       res.end();
     });
 });
+
+const UPLOAD_PATH = path.resolve(__dirname, './upload')
+const TEMP_UPLOAD_PATH = path.resolve(__dirname, './temp')
+
+const uploadTOTempDirectory = (filename, buffer) => {
+
+  let tempDirname = filename.split('_')[1]
+  let tempFilePath = path.resolve(TEMP_UPLOAD_PATH, `./${tempDirname}`)
+
+  if(!fs.statSync(tempFilePath)) {
+    fs.mkdirSync(tempFilePath)
+  }
+
+  let ws = fs.createWriteStream(tempFilePath + "/" + filename, {
+    flags: 'w'
+  })
+
+  ws.write(buffer)
+}
+
+app.post('/upload', (req, res) => {
+  // console.log(req)
+  let bb = busboy({ headers: req.headers })
+
+  bb.on("file", (name, file, info) => {
+    const { filename, encoding, mimeType } = info;
+    console.log(
+      `File [${name}]: filename: %j, encoding: %j, mimeType: %j`,
+      filename,
+      encoding,
+      mimeType
+    );
+    file.on('data', (data) => {
+      console.log(`File [${name}] got ${data.length} bytes`);
+      uploadTOTempDirectory(filename, data)
+    }).on('close', () => {
+      console.log(`File [${name}] done`);
+    });
+  })
+  bb.on('field', (name, val, info) => {
+    console.log(`Field [${name}]: value: %j`, val);
+  });
+  bb.on('close', () => {
+    console.log('Done parsing form!');
+    res.writeHead(303, { Connection: 'close', Location: '/' });
+    res.end();
+  });
+  
+  req.pipe(bb)
+})
 
 app.listen("9543", () => {
   console.log("listen on port 9543");
