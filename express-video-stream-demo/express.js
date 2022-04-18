@@ -50,7 +50,7 @@ const uploadTOTempDirectory = (filename, buffer) => {
   let tempDirname = filename.split('_')[1]
   let tempFilePath = path.resolve(TEMP_UPLOAD_PATH, `./${tempDirname}`)
 
-  if(!fs.statSync(tempFilePath)) {
+  if(!fs.statSync(tempFilePath, { throwIfNoEntry: false })) {
     fs.mkdirSync(tempFilePath)
   }
 

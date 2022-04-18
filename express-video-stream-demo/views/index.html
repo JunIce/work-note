@@ -81,9 +81,10 @@
         let size = Math.ceil(file.size / 30)
 
         while(start < file.size) {
+          i++
           chunks.push({
-            filename: `${++i}_${file.name}`,
-            file: new File([file.slice(start, (start = start + size))], `${++i}_${file.name}`)
+            filename: `${i}_${file.name}`,
+            file: new File([file.slice(start, (start = start + size))], `${i}_${file.name}`)
           })
         }
         return chunks
