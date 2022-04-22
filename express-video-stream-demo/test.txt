@@ -1,0 +1,1 @@
+In the same way, that we create a read stream, we can also create a write stream to write data to a file. Let’s first create an empty file with no contents called data.txt. 
