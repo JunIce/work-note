@@ -1,17 +1,16 @@
 <template>
   <div>
-    <h1>test</h1>
-    <Wave></Wave>
+    <editorVue/>
   </div>
 </template>
 
 <script>
-import Wave from './view/wave.vue'
+import editorVue from "./components/editor.vue"
 
 export default {
   name: 'App',
   components: {
-    Wave
+    editorVue
   }
 }
 </script>
