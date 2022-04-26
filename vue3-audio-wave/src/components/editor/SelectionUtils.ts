@@ -182,9 +182,9 @@ export default class SelectionUtils {
      *
      * @param range - range to check
      */
-    public static isRangeAtEditor(range: Range): boolean {
+    public static isRangeAtEditor(range: Range): boolean|undefined {
         if (!range) {
-            return;
+            return
         }
 
         let selectedNode = range.startContainer as HTMLElement;
@@ -230,7 +230,7 @@ export default class SelectionUtils {
      *
      * @param selection - Selection object to get Range from
      */
-    public static getRangeFromSelection(selection: Selection): Range {
+    public static getRangeFromSelection(selection: Selection): Range|null {
         return selection && selection.rangeCount
             ? selection.getRangeAt(0)
             : null;
@@ -242,7 +242,7 @@ export default class SelectionUtils {
      * @returns {DOMRect | ClientRect}
      */
     public static get rect(): DOMRect | ClientRect {
-        let sel: Selection | MSSelection = (document as Document).selection,
+        let sel: Selection | MSSelection| undefined = (document as Document).selection,
             range: TextRange | Range;
 
         let rect = {

@@ -1,4 +1,5 @@
 import Mparagraph from "./paragraph";
+import SelectionUtils from "./SelectionUtils";
 import { addEventListener, getCurrentRange, logger } from "./util";
 
 
@@ -7,11 +8,13 @@ export class Editor {
     container: any;
     content: any;
     currentBlock: any;
+    currentSelection?: Range|null;
 
     constructor(options: any) {
         this.container = options.el
         this.content = [];
         this.currentBlock = null;
+        this.currentSelection = null;
         this.init()
     }
 
@@ -43,7 +46,8 @@ export class Editor {
     }
 
     onSelection(e: Selection) {
-        console.log(e)
+        let range = SelectionUtils.range
+        console.log(range)
     }
 
 
