@@ -1,25 +1,35 @@
 import Mparagraph from "./paragraph";
 import SelectionUtils from "./SelectionUtils";
 import { addEventListener, getCurrentRange, logger } from "./util";
+import Mword from "./word";
 
 
+type EditorOption = {
+    el: HTMLElement
+}
 
 export class Editor {
-    container: any;
+    container: HTMLElement;
     content: any;
     currentBlock: any;
-    currentSelection?: Range|null;
+    currentSelectRange?: Range|null;
 
-    constructor(options: any) {
+    constructor(options: EditorOption) {
         this.container = options.el
+        this.container.classList.add(SelectionUtils.CSS.editorZone)
         this.content = [];
         this.currentBlock = null;
-        this.currentSelection = null;
+        this.currentSelectRange = null;
         this.init()
     }
 
     get value() {
         return this
+    }
+
+
+    get selectAWord() {
+        return this.currentSelectRange?.startContainer.nodeType === 3 && this.currentSelectRange?.startContainer === this.currentSelectRange?.endContainer
     }
 
     init() {
@@ -46,8 +56,11 @@ export class Editor {
     }
 
     onSelection(e: Selection) {
-        let range = SelectionUtils.range
-        console.log(range)
+        let range = SelectionUtils.range as Range
+
+        if(SelectionUtils.isRangeAtEditor(range)) {
+            this.currentSelectRange = range
+        }
     }
 
 
@@ -66,41 +79,69 @@ export class Editor {
 
     do(type: string, data1: string) {
         if(type === 'pinyin') {
-            let range = getCurrentRange()
-            logger(range);
+            console.log(this.selectAWord)
 
-            let rangeClone = range?.cloneRange()         
+            // 是否选择的单个字
+            if(this.selectAWord) {
+                let textNode = this.currentSelectRange?.startContainer
 
-            let ruby = document.createElement('ruby')
-            ruby.setAttribute('type', 'word')
-            
-            
-            if(rangeClone?.toString()) {
-                let text = document.createTextNode(rangeClone?.toString())
+                //@ts-ignore
+                let cword = textNode.__word as Mword
+                cword.setPinyin(data1)
 
-                let pinyin = document.createElement('rt')
-                pinyin.setAttribute('contentEditable', 'false')
-                pinyin.appendChild(document.createTextNode(data1))
+                // textNode?.parentNode?.removeChild(textNode)
 
-                ruby.appendChild(text)
-                ruby.appendChild(pinyin)
+                let temp = document.createTextNode("")
+                let parentNode = textNode?.parentNode
+                parentNode?.insertBefore(temp, textNode!)
+                parentNode?.removeChild(textNode!)
+                parentNode?.insertBefore(cword.pinyinFragment, temp)
+                parentNode?.removeChild(temp)
 
 
-                if(range?.startContainer === range?.endContainer && range?.startContainer.nodeName === '#text') {
-                    if(range.commonAncestorContainer.nextSibling?.nodeName === 'RT') {
-                        // update
-                        range.startContainer?.parentNode?.removeChild(range.commonAncestorContainer.nextSibling)
-                        range.startContainer?.parentNode?.appendChild(pinyin)
-                        return
-                    } else {
-                        range?.deleteContents()
-                    }
-                } else if(range?.commonAncestorContainer.nodeName === 'RUBY') {
-                    range?.commonAncestorContainer.parentNode?.removeChild(range?.commonAncestorContainer)
-                }
 
-                range?.insertNode(ruby)
+                // textNode?.parentNode?.insertBefore(cword.pinyinFragment, textNode)
+
+
+
+                console.dir(parentNode)
             }
+
+            // let range = getCurrentRange()
+            // logger(range);
+
+            // let rangeClone = range?.cloneRange()         
+
+            // let ruby = document.createElement('ruby')
+            // ruby.setAttribute('type', 'word')
+            
+            
+            // if(rangeClone?.toString()) {
+            //     let text = document.createTextNode(rangeClone?.toString())
+
+            //     let pinyin = document.createElement('rt')
+            //     pinyin.setAttribute('contentEditable', 'false')
+            //     pinyin.appendChild(document.createTextNode(data1))
+
+            //     ruby.appendChild(text)
+            //     ruby.appendChild(pinyin)
+
+
+            //     if(range?.startContainer === range?.endContainer && range?.startContainer.nodeName === '#text') {
+            //         if(range.commonAncestorContainer.nextSibling?.nodeName === 'RT') {
+            //             // update
+            //             range.startContainer?.parentNode?.removeChild(range.commonAncestorContainer.nextSibling)
+            //             range.startContainer?.parentNode?.appendChild(pinyin)
+            //             return
+            //         } else {
+            //             range?.deleteContents()
+            //         }
+            //     } else if(range?.commonAncestorContainer.nodeName === 'RUBY') {
+            //         range?.commonAncestorContainer.parentNode?.removeChild(range?.commonAncestorContainer)
+            //     }
+
+            //     range?.insertNode(ruby)
+            // }
         }
     }
 }

@@ -39,15 +39,15 @@ export default class SelectionUtils {
      *
      * @todo Check if this is still relevant
      */
-    public instance: Selection = null;
-    public selection: Selection = null;
+    public instance: Selection | null = null;
+    public selection: Selection | null = null;
 
     /**
      * This property can store SelectionUtils's range for restoring later
      *
      * @type {Range|null}
      */
-    public savedSelectionRange: Range = null;
+    public savedSelectionRange: Range | null = null;
 
     /**
      * Fake background is active
@@ -269,7 +269,7 @@ export default class SelectionUtils {
             return rect;
         }
 
-        sel = window.getSelection();
+        sel = window.getSelection() as Selection;
 
         if (sel.rangeCount === null || isNaN(sel.rangeCount)) {
             _.log("Method SelectionUtils.rangeCount is not supported", "warn");
@@ -299,10 +299,10 @@ export default class SelectionUtils {
 
                 const spanParent = span.parentNode;
 
-                spanParent.removeChild(span);
+                spanParent!.removeChild(span);
 
                 // Glue any broken text nodes back together
-                spanParent.normalize();
+                spanParent!.normalize();
             }
         }
 
@@ -315,7 +315,7 @@ export default class SelectionUtils {
      * @returns {string}
      */
     public static get text(): string {
-        return window.getSelection ? window.getSelection().toString() : "";
+        return window.getSelection ? (window.getSelection() as Selection).toString() : "";
     }
 
     /**
@@ -325,7 +325,7 @@ export default class SelectionUtils {
      * @returns {Selection}
      */
     public static get(): Selection {
-        return window.getSelection();
+        return window.getSelection() as Selection;
     }
 
     /**
@@ -336,9 +336,9 @@ export default class SelectionUtils {
      *
      * @returns {DOMRect} of range
      */
-    public static setCursor(element: HTMLElement, offset = 0): DOMRect {
+    public static setCursor(element: HTMLElement, offset = 0): DOMRect|undefined {
         const range = document.createRange();
-        const selection = window.getSelection();
+        const selection = window.getSelection() as Selection;
 
         /** if found deepest node is native input */
         if ($.isNativeInput(element)) {
@@ -432,7 +432,7 @@ export default class SelectionUtils {
             return;
         }
 
-        const sel = window.getSelection();
+        const sel = window.getSelection() as Selection;
 
         sel.removeAllRanges();
         sel.addRange(this.savedSelectionRange);
@@ -449,10 +449,10 @@ export default class SelectionUtils {
      * Collapse current selection
      */
     public collapseToEnd(): void {
-        const sel = window.getSelection();
-        const range = document.createRange();
+        const sel = window.getSelection() as Selection;
+        const range = document.createRange() as Range;
 
-        range.selectNodeContents(sel.focusNode);
+        range.selectNodeContents(sel!.focusNode as Node);
         range.collapse(false);
         sel.removeAllRanges();
         sel.addRange(range);
@@ -549,7 +549,7 @@ export default class SelectionUtils {
      * @param {HTMLElement} element - element which contents should be selcted
      */
     public expandToTag(element: HTMLElement): void {
-        const selection = window.getSelection();
+        const selection = window.getSelection() as Selection;
 
         selection.removeAllRanges();
         const range = document.createRange();
