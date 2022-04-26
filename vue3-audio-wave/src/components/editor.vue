@@ -14,16 +14,16 @@ import Mock from "mockjs";
 import { Editor } from "./editor";
 import "./editor/assets/index.less";
 
-function genMockData() {
-    return Mock.mock({
-        "data|20": [
-            {
-                word: "@cword(1)",
-                py: "@lower(@first)",
-            },
-        ],
-    });
-}
+// function genMockData() {
+//     return Mock.mock({
+//         "data|20": [
+//             {
+//                 word: "@cword(1)",
+//                 py: "@lower(@first)",
+//             },
+//         ],
+//     });
+// }
 
 let data = { data: [] };
 

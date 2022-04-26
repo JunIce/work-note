@@ -15,6 +15,10 @@ export class Editor {
         this.init()
     }
 
+    get value() {
+        return this
+    }
+
     init() {
         addEventListener(this.container, 'keypress', this.onKeyPress.bind(this))
         addEventListener(this.container, 'click', this.onClick.bind(this))

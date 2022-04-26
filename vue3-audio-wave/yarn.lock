@@ -934,6 +934,11 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
+"@codexteam/shortcuts@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/@codexteam/shortcuts/-/shortcuts-1.1.1.tgz#6aa19ed0476da78045847ddc6d5b311f2f015094"
+  integrity sha512-wtpYocFlFQSOiea3KAySn9ONno/yKL4JukokV0vJUq1BOUmVEx71sdTW7qgQhG1wcfIO2R/XJ/y4K9EZQyBzng==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.npmmirror.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -3513,6 +3518,11 @@ hosted-git-info@^2.1.4:
   version "2.8.9"
   resolved "https://registry.npmmirror.com/hosted-git-info/-/hosted-git-info-2.8.9.tgz#dffc0bf9a21c02209090f2aa69429e1414daf3f9"
   integrity sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==
+
+html-janitor@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmmirror.com/html-janitor/-/html-janitor-2.0.4.tgz#ae5a115cdf3331cd5501edd7b5471b18ea44cdbb"
+  integrity sha512-92J5h9jNZRk30PMHapjHEJfkrBWKCOy0bq3oW2pBungky6lzYSoboBGPMvxl1XRKB2q+kniQmsLsPbdpY7RM2g==
 
 html-minifier-terser@^6.1.0:
   version "6.1.0"
