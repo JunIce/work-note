@@ -1,5 +1,5 @@
 export const addEventListener = (
-    el: HTMLElement,
+    el: HTMLElement|Document,
     type: keyof HTMLElementEventMap,
     fn: any,
     options = {}

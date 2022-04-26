@@ -35,8 +35,9 @@ export default class Mparagraph {
         paragraph_wrapper.classList.add(this.className);
         paragraph_wrapper.setAttribute("data-type", "paragraph");
 
-        this.sentences.forEach((sentence) => {
-            paragraph_wrapper.appendChild(sentence.render());
+        this.sentences.forEach((sentence: Msentence, idx: number) => {
+            sentence.idx = idx
+            paragraph_wrapper.appendChild(sentence.sentenceFragment);
         });
 
         return paragraph_wrapper;
