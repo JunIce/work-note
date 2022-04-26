@@ -33,6 +33,7 @@ export class Editor {
 
 
     onClick(e: PointerEvent) {
+        // console.log(e.target)
         this.currentBlock = e.currentTarget
     }
 

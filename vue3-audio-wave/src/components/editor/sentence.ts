@@ -1,4 +1,5 @@
 import { Editor } from ".";
+import { addEventListener } from "./util";
 
 type MsentenceOption = {
     editor: Editor;
@@ -32,14 +33,14 @@ export default class Msentence {
             this.updateEvents();
         }
 
-        sentence_wrapper.textContent = this.words || ''
+        sentence_wrapper.textContent = this.words || "";
 
         return sentence_wrapper;
     }
 
     updateEvents() {
-        // addEventListener(this.wrapper!, "click", (e: KeyboardEvent) => {
-        //     console.log(e);
-        // });
+        addEventListener(this.wrapper!, "click", (e: KeyboardEvent) => {
+            console.log(e);
+        });
     }
 }
