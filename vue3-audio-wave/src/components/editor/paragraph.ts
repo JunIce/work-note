@@ -26,14 +26,14 @@ export default class Mparagraph {
     }
 
     addSentence() {
-        let sentence = new Msentence({ editor: this.editor! });
+        let sentence = new Msentence({ editor: this.editor!, text: '我的手机手机电视就激动激动激动' });
         this.sentences.push(sentence);
     }
 
     render() {
         let paragraph_wrapper = document.createElement("div");
         paragraph_wrapper.classList.add(this.className);
-        paragraph_wrapper.setAttribute("aria-label", "paragraph");
+        paragraph_wrapper.setAttribute("data-type", "paragraph");
 
         this.sentences.forEach((sentence) => {
             paragraph_wrapper.appendChild(sentence.render());
