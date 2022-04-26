@@ -9,10 +9,16 @@
     "jsx": "preserve",
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
+
+    // allows to import .json files for i18n
+    "resolveJsonModule": true,
+
+    // allows to omit export default in .json files
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "types": [
     ],
     "paths": {
