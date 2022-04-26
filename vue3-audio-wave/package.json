@@ -7,8 +7,10 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@codexteam/shortcuts": "^1.1.1",
     "@types/mockjs": "^1.0.6",
     "core-js": "^3.6.5",
+    "html-janitor": "^2.0.4",
     "mockjs": "^1.1.0",
     "vue": "^3.0.0"
   },

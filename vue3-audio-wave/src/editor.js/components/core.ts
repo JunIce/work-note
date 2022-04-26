@@ -13,7 +13,9 @@ import EventsDispatcher from './utils/events';
 /**
  * Require Editor modules places in components/modules dir
  */
-const contextRequire = require.context('./modules', true);
+
+ const contextRequire = import.meta.globEager("./modules/*.ts") 
+// const contextRequire = require.context('./modules', true);
 
 const modules = [];
 

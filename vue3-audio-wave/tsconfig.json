@@ -20,6 +20,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "types": [
+      "src/types"
     ],
     "paths": {
       "~/*": ["src/*"]

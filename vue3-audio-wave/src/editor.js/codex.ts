@@ -5,9 +5,9 @@ import { EditorConfig } from '../types';
 /**
  * Apply polyfills
  */
-import '@babel/register';
+// import '@babel/register';
 
-import 'components/polyfills';
+import './components/polyfills';
 import Core from './components/core';
 import * as _ from './components/utils';
 

@@ -2,7 +2,8 @@
 /**
  * Prebuilded sprite of SVG icons
  */
-import sprite from '../../../dist/sprite.svg';
+// import sprite from '../../../dist/sprite.svg';
+const sprite = ''
 
 /**
  * Module UI
