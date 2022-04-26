@@ -1,5 +1,6 @@
 import { Editor } from ".";
 import { addEventListener } from "./util";
+import Mword from "./word";
 
 type MsentenceOption = {
     editor: Editor;
@@ -7,22 +8,49 @@ type MsentenceOption = {
 };
 
 export default class Msentence {
+    idx?: number;
     words?: string;
+    wordsList: Mword[];
     className: string;
     wrapper: HTMLElement | null;
-    editor: Editor | null;
+    editor?: Editor;
 
     constructor({ editor, text }: MsentenceOption) {
         this.className = "sentence";
-        this.words = text;
+        this.wordsList = [];
         this.wrapper = null;
         this.editor = editor;
+
+        this._toCreateTextNodes(text);
     }
 
-    render() {
+    _toCreateTextNodes(wordStr: string = "") {
+        for (let i = 0; i < wordStr.length; i++) {
+            let word = new Mword(wordStr.charAt(i))
+            word.sentence = this
+            word.editor = this.editor
+
+            this.wordsList.push(word);
+        }
+    }
+
+    get wordsFragment() {
+        let frag = document.createDocumentFragment();
+
+        this.wordsList.forEach((word: Mword, idx: number) => {
+            word.idx = idx
+            frag.appendChild(word.word);
+        });
+
+        return frag;
+    }
+
+    get sentenceFragment() {
         let sentence_wrapper = document.createElement("ruby");
         sentence_wrapper.classList.add(this.className);
         sentence_wrapper.setAttribute("data-type", "sentence");
+        //@ts-ignore
+        sentence_wrapper.__sentence = this
 
         if (this.words?.length == 0) {
             sentence_wrapper.classList.add("empty-sentence");
@@ -33,7 +61,7 @@ export default class Msentence {
             this.updateEvents();
         }
 
-        sentence_wrapper.textContent = this.words || "";
+        sentence_wrapper.appendChild(this.wordsFragment);
 
         return sentence_wrapper;
     }

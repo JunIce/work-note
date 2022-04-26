@@ -22,6 +22,7 @@ export class Editor {
     init() {
         addEventListener(this.container, 'keypress', this.onKeyPress.bind(this))
         addEventListener(this.container, 'click', this.onClick.bind(this))
+        addEventListener(document, 'selectionchange', this.onSelection.bind(this))
 
         if(this.content.length == 0) {
             this.addNewParagraph()
