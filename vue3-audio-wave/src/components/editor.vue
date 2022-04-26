@@ -83,7 +83,7 @@ export default defineComponent({
 
             let range = document.createRange();
             // range.setStartBefore(target!)
-            range.setStart(container!, 0);
+            range.setStart(container!, 2);
             range.setEnd(container!, 3);
             // range
 
@@ -98,7 +98,7 @@ export default defineComponent({
             // range.insertNode(c)
 
 
-            //     sel?.addRange(range)
+                sel?.addRange(range)
             console.log(range);
         };
 

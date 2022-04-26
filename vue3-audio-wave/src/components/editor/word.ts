@@ -33,12 +33,11 @@ export default class Mword {
         let ruby = document.createElement('ruby')
         ruby.setAttribute('type', 'word')
         
-        let text = document.createTextNode(this.pinyin!)
         let pinyin = document.createElement('rt')
         pinyin.setAttribute('contentEditable', 'false')
-        pinyin.appendChild(this.word)
+        pinyin.appendChild(document.createTextNode(this.pinyin))
 
-        ruby.appendChild(text)
+        ruby.appendChild(this.word)
         ruby.appendChild(pinyin)
         return ruby
     }
