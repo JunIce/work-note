@@ -2,6 +2,7 @@
     <div class="content">
         <button @click="toggle">toggle</button>
         <button @click="getSelection">selection</button>
+        <button @click="pinyin">标注</button>
 
         <div id="editor" ref="editorRef" contenteditable="true"></div>
     </div>
@@ -11,7 +12,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import Mock from "mockjs";
 import { Editor } from "./editor";
-import "./editor/assets/index.less"
+import "./editor/assets/index.less";
 
 function genMockData() {
     return Mock.mock({
@@ -24,12 +25,12 @@ function genMockData() {
     });
 }
 
-let data = genMockData();
-
+let data = { data: [] };
 
 export default defineComponent({
     setup() {
         const editorRef = ref(null);
+        const editorDo = ref(null);
         const words = ref(data.data);
         const visible = ref(true);
         const toggle = () => (visible.value = !visible.value);
@@ -39,10 +40,17 @@ export default defineComponent({
         };
 
         onMounted(() => {
-            new Editor({
+            editorDo.value = new Editor({
                 el: editorRef.value,
             });
+
+
+            editorDo.value.render()
         });
+
+        const pinyin = () => {
+            editorDo.value.do('pinyin', Mock.mock("@first"))
+        };
 
         return {
             editorRef,
@@ -50,6 +58,7 @@ export default defineComponent({
             visible,
             toggle,
             getSelection,
+            pinyin,
         };
     },
 });
