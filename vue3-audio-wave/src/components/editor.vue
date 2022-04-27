@@ -44,7 +44,7 @@ export default defineComponent({
 
         onMounted(() => {
             editorDo.value = new Editor({
-                el: editorRef.value,
+                el: editorRef.value!,
             });
 
             editorDo.value.render();
