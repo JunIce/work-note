@@ -46,7 +46,7 @@ export default class Msentence {
         return frag;
     }
 
-    get sentenceFragment() {
+    get value() {
         let sentence_wrapper = document.createElement("ruby");
         sentence_wrapper.classList.add(this.className);
         sentence_wrapper.setAttribute("data-type", "sentence");

@@ -38,8 +38,7 @@ export default class Mparagraph {
 
         this.sentences.forEach((sentence: Msentence, idx: number) => {
             sentence.idx = idx
-            paragraph_wrapper.appendChild(sentence.sentenceFragment);
-            sentence.highlight()
+            paragraph_wrapper.appendChild(sentence.value);
         });
 
         return paragraph_wrapper;

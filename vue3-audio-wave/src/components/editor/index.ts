@@ -1,7 +1,7 @@
 import Mparagraph from "./paragraph";
 import SelectionUtils from "./SelectionUtils";
 import Msentence from "./sentence";
-import { addEventListener, getCurrentRange, logger } from "./util";
+import { addEventListener } from "./util";
 import Mword from "./word";
 
 
