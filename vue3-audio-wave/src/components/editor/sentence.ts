@@ -1,4 +1,5 @@
 import { Editor } from ".";
+import SelectionUtils from "./SelectionUtils";
 import { addEventListener } from "./util";
 import Mword from "./word";
 
@@ -26,9 +27,9 @@ export default class Msentence {
 
     _toCreateTextNodes(wordStr: string = "") {
         for (let i = 0; i < wordStr.length; i++) {
-            let word = new Mword(wordStr.charAt(i))
-            word.sentence = this
-            word.editor = this.editor
+            let word = new Mword(wordStr.charAt(i));
+            word.sentence = this;
+            word.editor = this.editor;
 
             this.wordsList.push(word);
         }
@@ -38,7 +39,7 @@ export default class Msentence {
         let frag = document.createDocumentFragment();
 
         this.wordsList.forEach((word: Mword, idx: number) => {
-            word.idx = idx
+            word.idx = idx;
             frag.appendChild(word.word);
         });
 
@@ -50,7 +51,7 @@ export default class Msentence {
         sentence_wrapper.classList.add(this.className);
         sentence_wrapper.setAttribute("data-type", "sentence");
         //@ts-ignore
-        sentence_wrapper.__sentence = this
+        sentence_wrapper.__sentence = this;
 
         if (this.words?.length == 0) {
             sentence_wrapper.classList.add("empty-sentence");
@@ -58,12 +59,23 @@ export default class Msentence {
 
         if (!this.wrapper) {
             this.wrapper = sentence_wrapper;
-            this.updateEvents();
+            // this.updateEvents();
         }
 
         sentence_wrapper.appendChild(this.wordsFragment);
 
         return sentence_wrapper;
+    }
+
+    insertMaker() {
+        let currentSelectRange = this.editor?.currentSelectRange;
+        let maker = document.createElement("maker");
+        
+        maker.contentEditable = "false";
+        maker.classList.add("maker1");
+        maker.textContent = "200";
+        currentSelectRange!.insertNode(maker);
+        SelectionUtils.setCursor(maker.nextSibling!, 0);
     }
 
     updateEvents() {

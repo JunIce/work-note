@@ -336,7 +336,7 @@ export default class SelectionUtils {
      *
      * @returns {DOMRect} of range
      */
-    public static setCursor(element: HTMLElement, offset = 0): DOMRect|undefined {
+    public static setCursor(element: Node|ChildNode|HTMLElement, offset = 0): DOMRect|undefined {
         const range = document.createRange();
         const selection = window.getSelection() as Selection;
 

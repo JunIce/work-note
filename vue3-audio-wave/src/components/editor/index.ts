@@ -1,5 +1,6 @@
 import Mparagraph from "./paragraph";
 import SelectionUtils from "./SelectionUtils";
+import Msentence from "./sentence";
 import { addEventListener, getCurrentRange, logger } from "./util";
 import Mword from "./word";
 
@@ -11,8 +12,9 @@ type EditorOption = {
 export class Editor {
     container: HTMLElement;
     content: any;
-    currentBlock: any;
+    currentBlock: Msentence|null;
     currentSelectRange?: Range|null;
+    sel: SelectionUtils;
 
     constructor(options: EditorOption) {
         this.container = options.el
@@ -20,6 +22,7 @@ export class Editor {
         this.content = [];
         this.currentBlock = null;
         this.currentSelectRange = null;
+        this.sel = new SelectionUtils();
         this.init()
     }
 
@@ -51,13 +54,25 @@ export class Editor {
 
 
     onClick(e: PointerEvent) {
-        // console.log(e.target)
-        this.currentBlock = e.currentTarget
+
+        let target = e.target as HTMLElement
+        if(target.nodeName === 'RUBY' && target.getAttribute("data-type") === "sentence") {
+            //@ts-ignore
+            this.currentBlock = target.__sentence
+            if(!this.currentSelectRange) {
+                this.sel.collapseToEnd()
+            }
+        } else {
+            this.sel.collapseToEnd()
+        }
+        console.log(target.getAttribute("data-type"))
+        // this.currentBlock = e.currentTarget
     }
 
     onSelection(e: Selection) {
         let range = SelectionUtils.range as Range
-
+        this.currentSelectRange = null
+        
         if(SelectionUtils.isRangeAtEditor(range)) {
             this.currentSelectRange = range
         }
@@ -77,17 +92,22 @@ export class Editor {
         })
     }
 
-    do(type: string, data1: string) {
-        if(type === 'pinyin') {
-            console.log(this.selectAWord)
+    do(type: string, data1?: string) {
+        if(type === 'insertMaker') {
+            // 光标折叠
+            if(this.currentSelectRange?.collapse) {
+                this.currentBlock?.insertMaker()
+            }
+        }
 
+        if(type === 'pinyin') {
             // 是否选择的单个字
             if(this.selectAWord) {
                 let textNode = this.currentSelectRange?.startContainer
 
                 //@ts-ignore
                 let cword = textNode.__word as Mword
-                cword.setPinyin(data1)
+                cword.setPinyin(data1!)
 
                 // textNode?.parentNode?.removeChild(textNode)
 
