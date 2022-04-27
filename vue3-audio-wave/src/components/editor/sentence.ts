@@ -27,7 +27,7 @@ export default class Msentence {
 
     _toCreateTextNodes(wordStr: string = "") {
         for (let i = 0; i < wordStr.length; i++) {
-            let word = new Mword(wordStr.charAt(i));
+            let word = new Mword({ text: wordStr.charAt(i) });
             word.sentence = this;
             word.editor = this.editor;
 
@@ -67,15 +67,20 @@ export default class Msentence {
         return sentence_wrapper;
     }
 
+    highlight() {
+        this.wrapper!.classList.add('highlight')
+    }
+
     insertMaker() {
         let currentSelectRange = this.editor?.currentSelectRange;
-        let maker = document.createElement("maker");
+        let maker = new Mword({ tag: 'maker', text:'200' });
+
+        console.log(currentSelectRange);
         
-        maker.contentEditable = "false";
-        maker.classList.add("maker1");
-        maker.textContent = "200";
-        currentSelectRange!.insertNode(maker);
-        SelectionUtils.setCursor(maker.nextSibling!, 0);
+
+        ;(maker.el as HTMLElement).classList.add("maker1");
+        currentSelectRange!.insertNode(maker.el!);
+        SelectionUtils.setCursor(maker.el!.nextSibling!, 0);
     }
 
     updateEvents() {

@@ -27,6 +27,7 @@ export default class Mparagraph {
 
     addSentence() {
         let sentence = new Msentence({ editor: this.editor!, text: '我的手机手机电视就激动激动激动' });
+        
         this.sentences.push(sentence);
     }
 
@@ -38,6 +39,7 @@ export default class Mparagraph {
         this.sentences.forEach((sentence: Msentence, idx: number) => {
             sentence.idx = idx
             paragraph_wrapper.appendChild(sentence.sentenceFragment);
+            sentence.highlight()
         });
 
         return paragraph_wrapper;
