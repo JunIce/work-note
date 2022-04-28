@@ -9,6 +9,7 @@ export default class Mparagraph {
     sentences: any[];
     className: string;
     editor: null | Editor;
+    el: HTMLElement| any;
 
     constructor({ editor }: MparagraphOption) {
         this.sentences = [];
@@ -19,6 +20,7 @@ export default class Mparagraph {
 
     init() {
         this.addSentence();
+        this.el = this.render()
     }
 
     get value() {
