@@ -1,7 +1,7 @@
 import Mparagraph from "./paragraph";
 import SelectionUtils from "./SelectionUtils";
 import Msentence from "./sentence";
-import { addEventListener } from "./util";
+import { addEventListener, logger } from "./util";
 import Mword from "./word";
 
 
@@ -16,6 +16,8 @@ export class Editor {
     currentSelectRange?: Range|null;
     sel: SelectionUtils;
 
+    _caretBaseNode: any;
+
     constructor(options: EditorOption) {
         this.container = options.el
         this.container.classList.add(SelectionUtils.CSS.editorZone)
@@ -23,6 +25,9 @@ export class Editor {
         this.currentBlock = null;
         this.currentSelectRange = null;
         this.sel = new SelectionUtils();
+
+        // this._caretBaseNode = null;
+
         this.init()
     }
 
@@ -39,6 +44,8 @@ export class Editor {
         addEventListener(this.container, 'keypress', this.onKeyPress.bind(this))
         addEventListener(this.container, 'click', this.onClick.bind(this))
         addEventListener(document, 'selectionchange', this.onSelection.bind(this))
+        addEventListener(this.container, 'focus', this.onFocus.bind(this))
+        // addEventListener(this.container, "change", this.onInput.bind(this))
 
         if(this.content.length == 0) {
             this.addNewParagraph()
@@ -48,8 +55,17 @@ export class Editor {
 
     onKeyPress(e:KeyboardEvent) {
         if(e.keyCode === 13) {
+            e.preventDefault()
             this.addNewParagraph()
         }
+    }
+
+    onInput(e: KeyboardEvent) {
+        logger(e)
+    }
+
+    onFocus() {
+        logger(SelectionUtils.anchorNode)
     }
 
 
@@ -59,22 +75,25 @@ export class Editor {
         if(target.nodeName === 'RUBY' && target.getAttribute("data-type") === "sentence") {
             //@ts-ignore
             this.currentBlock = target.__sentence
-            if(!this.currentSelectRange) {
-                this.sel.collapseToEnd()
-            }
+
         } else {
             this.sel.collapseToEnd()
         }
         console.log(target.getAttribute("data-type"))
-        // this.currentBlock = e.currentTarget
     }
 
     onSelection(e: Selection) {
         let range = SelectionUtils.range as Range
         this.currentSelectRange = null
+        let selection = window.getSelection()  
         
         if(SelectionUtils.isRangeAtEditor(range)) {
             this.currentSelectRange = range
+
+            if(selection?.type === 'Caret') {
+                console.log(range.startContainer)
+                this._caretBaseNode = range.startContainer
+            }
         }
     }
 
@@ -82,13 +101,16 @@ export class Editor {
     addNewParagraph() {
         let paragraph = new Mparagraph({ editor: this })
         this.content.push(paragraph)
+       
+        console.log(this.content);
+        
     }
 
     render() {
         let content = this.content.slice()
 
         content.forEach((paragraph: Mparagraph) => {
-            this.container.appendChild(paragraph.render())
+            this.container.appendChild(paragraph.el)
         })
     }
 

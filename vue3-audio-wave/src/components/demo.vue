@@ -17,6 +17,8 @@
 
         <div>
             <button @click="createRange">createRange</button>
+            <button @click="extractContents">extractContents</button>
+            <button @click="surroundContents">surroundContents</button>
         </div>
     </div>
 </template>
@@ -55,4 +57,43 @@ const createRange = () => {
     sel?.addRange(range);
     console.log(range);
 };
+
+
+const extractContents = () => {
+    let selection = window.getSelection()
+
+    let range = selection?.getRangeAt(0)
+
+    let content = range?.extractContents()
+    console.dir(content);
+
+    let wrapper = document.createElement("span")
+    wrapper.style.color = 'red'
+    wrapper.appendChild(content!)
+    range?.insertNode(wrapper)
+    // range?.deleteContents()
+    selection?.collapseToEnd()
+}
+
+
+const surroundContents = () => {
+    let selection = window.getSelection()
+    let range = selection?.getRangeAt(0)
+
+
+    // let content = range?.extractContents()
+    console.dir(range);
+    
+
+    let wrapper = document.createElement("span")
+    wrapper.style.color = 'green'
+    // wrapper.appendChild(content!)
+    try {
+        range?.surroundContents(wrapper)
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
 </script>
