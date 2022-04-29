@@ -1,10 +1,10 @@
 <template>
     <div class="content">
-       
         <button @click="toggle">toggle</button>
         <button @click="getSelection">selection</button>
         <button @click="pinyin">标注拼音</button>
         <button @click="insertMaker">插入标记</button>
+        <button @click="collapseRange">折叠选区</button>
 
         <div id="editor" ref="editorRef" contenteditable="true"></div>
     </div>
@@ -54,12 +54,21 @@ export default defineComponent({
             editorDo.value!.do("pinyin", Mock.mock("@first"));
         };
 
-
-
-
         const insertMaker = () => {
             editorDo.value!.do("insertMaker");
-        }
+        };
+
+        const collapseRange = () => {
+            let selection = window.getSelection();
+            let range = selection?.getRangeAt(0);
+            // range?.collapse()
+            setTimeout(() => {
+                // selection?.collapseToEnd()
+                range?.collapse(false);
+                console.log(range);
+            }, 1000);
+            // selection?.addRange(range!)
+        };
 
         return {
             ulRef,
@@ -69,7 +78,8 @@ export default defineComponent({
             toggle,
             getSelection,
             pinyin,
-            insertMaker
+            insertMaker,
+            collapseRange,
         };
     },
 });

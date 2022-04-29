@@ -68,17 +68,16 @@ export default class Msentence {
     }
 
     highlight() {
-        this.wrapper!.classList.add('highlight')
+        this.wrapper!.classList.add("highlight");
     }
 
     insertMaker() {
         let currentSelectRange = this.editor?.currentSelectRange;
-        let maker = new Mword({ tag: 'maker', text:'200' });
+        let maker = new Mword({ tag: "maker", text: "200" });
 
         console.log(currentSelectRange);
-        
 
-        ;(maker.el as HTMLElement).classList.add("maker1");
+        (maker.el as HTMLElement).classList.add("maker1");
         currentSelectRange!.insertNode(maker.el!);
         SelectionUtils.setCursor(maker.el!.nextSibling!, 0);
     }
