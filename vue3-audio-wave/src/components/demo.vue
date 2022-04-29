@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id="test">
+        <div id="test" contenteditable="true">
             一定不要把别人<i>都当傻子，</i><span>事实上，</span
             ><i>所有你能遇到的人都比你聪明。</i
             >如果你能抱着这样的心态为人处世，那么你的人脉会越来越宽，财富越来越多，人生也就越来越好！
@@ -19,6 +19,7 @@
             <button @click="createRange">createRange</button>
             <button @click="extractContents">extractContents</button>
             <button @click="surroundContents">surroundContents</button>
+            <button @click="createRangeDo">createRangeDo</button>
         </div>
     </div>
 </template>
@@ -57,6 +58,22 @@ const createRange = () => {
     sel?.addRange(range);
     console.log(range);
 };
+
+
+const createRangeDo = () => {
+    let selection = window.getSelection()
+    selection?.removeAllRanges()
+    let childs = document.querySelector('#test')?.childNodes || []
+    if(childs?.length > 0) {
+        let range = new Range()
+        range.setStart(childs[0]!, 3)
+        range.setEnd(childs[2].childNodes[0], 3)
+        // range.setEnd(childs[3], 0)
+
+        selection?.addRange(range)
+    }
+    
+}
 
 
 const extractContents = () => {
