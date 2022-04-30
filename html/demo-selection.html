@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #editor {
+            width: 800px;
+            height: 600px;
+            padding: 20px;
+            border: 1px solid #666;
+            line-height: 20px;
+        }
+
+        rt {
+            position: absolute;
+            top: 0;
+            left: 0;
+            line-height: 0;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="editor" contenteditable="true">老爸是八年前的春天离开我的，<i>那天夜里</i>飘着雨。<b>深夜哥打来电</b>话说<mark>爸突发心梗在</mark>医院抢救，我跑下楼时腿软得象踩着棉花，赶到医院，爸却永远闭上了眼睛。父爱是山，那一刻，我失去了依靠，心，在那一瞬间痛得无以复加。老爸走得太匆忙，我抚摸着您还温热的脸，不敢相<mark><ruby contenteditable="false">你<rt>ni</rt></ruby></mark>信您真的离我远去……当年深夜的电话铃声，让我落下了病根，直到现在，夜晚听到电话铃突然响起，心就会“突突”跳个不停，这种心痛至今无法愈合。</div>
+
+
+    <div class="box">
+        <button id="btn1">wrapper with span</button>
+    </div>
+
+
+    <script>
+        const getRange = () => {
+            let selection = document.getSelection()
+            return selection.getRangeAt(0)
+        }
+
+        let btn1 = document.querySelector('#btn1')
+        btn1.addEventListener('click', () => {
+            let range = getRange()
+
+            let clone = range.cloneRange()
+
+            let span = document.createElement('span')
+
+            let content = range.cloneContents()
+
+            span.appendChild(content)
+            range.insertNode(span)
+
+            range.deleteContents()
+
+            //range.deleteContents()
+
+
+
+            console.log(clone)
+        }, false)
+
+    </script>
+</body>
+
+</html>
