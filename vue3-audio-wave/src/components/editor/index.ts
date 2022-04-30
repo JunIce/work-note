@@ -147,44 +147,17 @@ export class Editor {
                 parentNode?.insertBefore(cword.pinyinFragment, temp);
                 parentNode?.removeChild(temp);
 
-                // textNode?.parentNode?.insertBefore(cword.pinyinFragment, textNode)
-
                 console.dir(parentNode);
             }
+        }
 
-            // let range = getCurrentRange()
-            // logger(range);
 
-            // let rangeClone = range?.cloneRange()
+        if(type === 'between-mark') {
+            let mark = document.createElement("mark")
 
-            // let ruby = document.createElement('ruby')
-            // ruby.setAttribute('type', 'word')
-
-            // if(rangeClone?.toString()) {
-            //     let text = document.createTextNode(rangeClone?.toString())
-
-            //     let pinyin = document.createElement('rt')
-            //     pinyin.setAttribute('contentEditable', 'false')
-            //     pinyin.appendChild(document.createTextNode(data1))
-
-            //     ruby.appendChild(text)
-            //     ruby.appendChild(pinyin)
-
-            //     if(range?.startContainer === range?.endContainer && range?.startContainer.nodeName === '#text') {
-            //         if(range.commonAncestorContainer.nextSibling?.nodeName === 'RT') {
-            //             // update
-            //             range.startContainer?.parentNode?.removeChild(range.commonAncestorContainer.nextSibling)
-            //             range.startContainer?.parentNode?.appendChild(pinyin)
-            //             return
-            //         } else {
-            //             range?.deleteContents()
-            //         }
-            //     } else if(range?.commonAncestorContainer.nodeName === 'RUBY') {
-            //         range?.commonAncestorContainer.parentNode?.removeChild(range?.commonAncestorContainer)
-            //     }
-
-            //     range?.insertNode(ruby)
-            // }
+            mark.appendChild(this.currentSelectRange?.extractContents()!)
+            this.currentSelectRange?.insertNode(mark)
+            
         }
     }
 }

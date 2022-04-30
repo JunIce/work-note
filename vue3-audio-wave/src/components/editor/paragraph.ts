@@ -23,10 +23,9 @@ export default class Mparagraph {
 
     init() {
         this.observer.observe(this.el, {
-            characterData: true,
             childList: true,
             subtree: true,
-            attributes: true,
+            attributes: true
         });
         this.addSentence();
         // this.el = this.render()

@@ -47,7 +47,7 @@ export default class Msentence {
     }
 
     get value() {
-        let sentence_wrapper = document.createElement("ruby");
+        let sentence_wrapper = document.createElement("div");
         sentence_wrapper.classList.add(this.className);
         sentence_wrapper.setAttribute("data-type", "sentence");
         //@ts-ignore

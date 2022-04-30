@@ -1,10 +1,11 @@
 <template>
     <div class="content">
-        <button @click="toggle">toggle</button>
-        <button @click="getSelection">selection</button>
+        <button @click="toggle">切换显示拼音</button>
+        <!-- <button @click="getSelection">selection</button> -->
         <button @click="pinyin">标注拼音</button>
         <button @click="insertMaker">插入标记</button>
         <button @click="collapseRange">折叠选区</button>
+        <button @click="selectedMark">划选标记</button>
 
         <div id="editor" ref="editorRef" contenteditable="true"></div>
     </div>
@@ -70,6 +71,13 @@ export default defineComponent({
             // selection?.addRange(range!)
         };
 
+
+        const selectedMark = () => {
+            // 划选两边加标记
+            editorDo.value!.do("between-mark");
+
+        }
+
         return {
             ulRef,
             editorRef,
@@ -80,6 +88,7 @@ export default defineComponent({
             pinyin,
             insertMaker,
             collapseRange,
+            selectedMark
         };
     },
 });
