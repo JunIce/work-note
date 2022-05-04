@@ -1,23 +1,31 @@
 <template>
-  <div>
-    <h1>test</h1>
-    <Wave></Wave>
-  </div>
+    <div class="flex">
+        <div style="width: 70%">
+            <editorVue />
+        </div>
+        <div style="width: 30%">
+            <demo />
+        </div>
+    </div>
 </template>
 
 <script>
-import Wave from './view/wave.vue'
-
+import editorVue from "./components/editor.vue";
+import demo from "./components/demo.vue";
 export default {
-  name: 'App',
-  components: {
-    Wave
-  }
-}
+    name: "App",
+    components: {
+        editorVue,
+        demo,
+    },
+};
 </script>
 
 <style>
 #app {
-  height: 100%;
+    height: 100%;
+}
+.flex {
+    display: flex;
 }
 </style>
