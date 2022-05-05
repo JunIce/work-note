@@ -86,7 +86,7 @@ export class Editor {
             //@ts-ignore
             this.currentBlock = target.__sentence;
         } else {
-            this.sel.collapseToEnd();
+            // this.sel.collapseToEnd();
         }
         // console.log(target.getAttribute("data-type"))
     }
@@ -157,7 +157,7 @@ export class Editor {
 
             mark.appendChild(this.currentSelectRange?.extractContents()!)
             this.currentSelectRange?.insertNode(mark)
-            
+
         }
     }
 }

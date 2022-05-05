@@ -44,6 +44,7 @@ export default class Mword {
         if (!this.pinyin) return this.word;
         let ruby = document.createElement("ruby");
         ruby.setAttribute("type", "word");
+        ruby.contentEditable = "false"
 
         let pinyin = document.createElement("rt");
         pinyin.setAttribute("contentEditable", "false");
@@ -52,5 +53,18 @@ export default class Mword {
         ruby.appendChild(this.word);
         ruby.appendChild(pinyin);
         return ruby;
+    }
+
+
+
+    public static textStringToMwordNode(text: string) {
+        let fragment = document.createDocumentFragment()
+
+        for(let i = 0; i < text.length; i++) {
+            let word = new Mword({text: text.charAt(i)})
+            fragment.appendChild(word.el!)
+        }
+
+        return fragment
     }
 }

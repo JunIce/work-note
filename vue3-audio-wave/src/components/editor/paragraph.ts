@@ -1,5 +1,7 @@
 import { Editor } from ".";
 import Msentence from "./sentence";
+import Mword from "./word";
+import { debounce, throttle } from "./utils";
 
 type MparagraphOption = {
     editor: Editor;
@@ -12,12 +14,38 @@ export default class Mparagraph {
     el: HTMLElement | any;
     observer: MutationObserver;
 
+    private update = debounce(
+        (mutations: MutationRecord[], _observer: MutationObserver) => {
+            mutations.forEach((mutation) => {
+                // text node change
+                if (
+                    mutation.type === "characterData" &&
+                    mutation.target.nodeType === 3
+                ) {
+                    // if()
+                    let target = mutation.target as Text;
+                    // 判断是否超过一个字的文本节点
+                    if (target.length > 1) {
+                        let node = Mword.textStringToMwordNode(
+                            target.textContent as string
+                        );
+
+                        target.parentNode?.insertBefore(node, target)
+                        // target.parentNode?.removeChild(target)
+                        target.remove()
+                    }
+                }
+            });
+        },
+        500
+    );
+
     constructor({ editor }: MparagraphOption) {
         this.sentences = [];
         this.className = "m_paragraph";
         this.editor = editor;
         this.el = this.render();
-        this.observer = new MutationObserver(this.mutationObserverCallback);
+        this.observer = new MutationObserver(this.update);
         this.init();
     }
 
@@ -25,17 +53,10 @@ export default class Mparagraph {
         this.observer.observe(this.el, {
             childList: true,
             subtree: true,
-            attributes: true
+            // attributes: true,
+            characterData: true,
         });
         this.addSentence();
-        // this.el = this.render()
-    }
-
-    mutationObserverCallback(
-        mutations: MutationRecord[],
-        observer: MutationObserver
-    ) {
-        console.log(mutations, observer);
     }
 
     get value() {
