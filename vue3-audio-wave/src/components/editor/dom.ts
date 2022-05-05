@@ -634,4 +634,15 @@ export default class Dom {
       right: left + rect.width,
     };
   }
+
+
+  public static findParentWordNode(node: Node) {
+    let parentNode
+    while(parentNode = node.parentNode) {
+      if(parentNode.nodeType == 1 && parentNode.nodeName === 'SPAN' && parentNode!.dataset?.type === 'word') {
+        break
+      }
+    }
+    return parentNode
+  }
 }

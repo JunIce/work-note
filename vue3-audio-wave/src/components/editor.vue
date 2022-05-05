@@ -3,12 +3,12 @@
         <t-button theme="default" variant="base"> 填充按钮 </t-button>
     </div>
     <div class="menu-section">
-        <button @click="toggle">切换显示拼音</button>
-        <!-- <button @click="getSelection">selection</button> -->
-        <button @click="pinyin">标注拼音</button>
-        <button @click="insertMaker">插入标记</button>
-        <button @click="collapseRange">折叠选区</button>
-        <button @click="selectedMark">划选标记</button>
+        <t-button @click="toggle">切换显示拼音</t-button>
+        <!-- <t-button @click="getSelection">selection</t-button> -->
+        <t-button @click="pinyin">标注拼音</t-button>
+        <t-button @click="insertMaker">插入标记</t-button>
+        <t-button @click="collapseRange">折叠选区</t-button>
+        <t-button @click="selectedMark">划选标记</t-button>
     </div>
     <div class="content">
         <div id="editor" ref="editorRef" contenteditable="true"></div>

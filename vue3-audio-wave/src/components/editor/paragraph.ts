@@ -2,6 +2,7 @@ import { Editor } from ".";
 import Msentence from "./sentence";
 import Mword from "./word";
 import { debounce } from "./utils";
+import Dom from "./dom";
 
 type MparagraphOption = {
     editor: Editor;
@@ -16,13 +17,14 @@ export default class Mparagraph {
 
     private update = debounce(
         (mutations: MutationRecord[], _observer: MutationObserver) => {
+            console.log(mutations);
+            
             mutations.forEach((mutation) => {
                 // text node change
                 if (
                     mutation.type === "characterData" &&
                     mutation.target.nodeType === 3
                 ) {
-                    // if()
                     let target = mutation.target as Text;
                     // 判断是否超过一个字的文本节点
                     if (target.length > 1) {
@@ -30,9 +32,14 @@ export default class Mparagraph {
                             target.textContent as string
                         );
 
-                        target.parentNode?.insertBefore(node, target)
-                        // target.parentNode?.removeChild(target)
-                        target.remove()
+                        let wordNode: HTMLElement | null = Dom.findParentWordNode(target)
+
+                        let temp = Dom.make('span')
+                        temp.appendChild(node)
+
+                        wordNode?.insertAdjacentHTML('afterend', temp.innerHTML)
+                        wordNode?.remove()
+                        temp?.remove()
                     }
                 }
             });

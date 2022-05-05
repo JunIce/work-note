@@ -21,7 +21,8 @@ export default class Mword {
             : document.createTextNode(text);
 
         if (tag) {
-            (wordNode as HTMLElement).contentEditable = "false";
+            ;(wordNode as HTMLElement).setAttribute('data-type', 'word')
+            // (wordNode as HTMLElement).contentEditable = "false";
             wordNode.textContent = text;
         }
 
@@ -61,7 +62,7 @@ export default class Mword {
         let fragment = document.createDocumentFragment()
 
         for(let i = 0; i < text.length; i++) {
-            let word = new Mword({text: text.charAt(i)})
+            let word = new Mword({tag: "span", text: text.charAt(i)})
             fragment.appendChild(word.el!)
         }
 
