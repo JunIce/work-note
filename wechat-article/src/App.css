@@ -1,0 +1,22 @@
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+.search-bar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.list-section {
+  height: calc(100%);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.row-item {
+  padding: 8px 0;
+}
