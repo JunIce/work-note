@@ -4,7 +4,6 @@
     </div>
     <div class="menu-section">
         <t-button @click="toggle">切换显示拼音</t-button>
-        <!-- <t-button @click="getSelection">selection</t-button> -->
         <t-button @click="pinyin">标注拼音</t-button>
         <t-button @click="insertMaker">插入标记</t-button>
         <t-button @click="collapseRange">折叠选区</t-button>

@@ -13,6 +13,7 @@ export class Editor {
     content: any;
     currentBlock: Msentence | null;
     currentSelectRange?: Range | null;
+    currentParagraphIndex: number;
     sel: SelectionUtils;
 
     _caretBaseNode: any;
@@ -22,6 +23,7 @@ export class Editor {
         this.container.classList.add(SelectionUtils.CSS.editorZone);
         this.content = [];
         this.currentBlock = null;
+        this.currentParagraphIndex = -1;
         this.currentSelectRange = null;
         this.sel = new SelectionUtils();
 
@@ -109,8 +111,9 @@ export class Editor {
     addNewParagraph() {
         let paragraph = new Mparagraph({ editor: this });
         this.content.push(paragraph);
-
-        console.log(this.content);
+        this.currentParagraphIndex = this.content.length - 1;
+        this.container.appendChild(paragraph.el);
+        SelectionUtils.setCursor(paragraph.el, 0); 
     }
 
     render() {
