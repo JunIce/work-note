@@ -645,4 +645,21 @@ export default class Dom {
     }
     return parentNode
   }
+
+  public static findParagraphWordEl(el: HTMLElement) {
+
+    let node
+
+    while(node = el.lastElementChild) {
+      if(!node) break
+
+      if(node.nodeType == 1 && node.nodeName === 'SPAN' && node.dataset.type === 'word') {
+        break
+      } else {
+        continue
+      }
+    }
+
+    return node
+  }
 }

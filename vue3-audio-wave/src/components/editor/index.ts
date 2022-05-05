@@ -1,3 +1,4 @@
+import Dom from "./dom";
 import Mparagraph from "./paragraph";
 import SelectionUtils from "./SelectionUtils";
 import Msentence from "./sentence";
@@ -113,7 +114,10 @@ export class Editor {
         this.content.push(paragraph);
         this.currentParagraphIndex = this.content.length - 1;
         this.container.appendChild(paragraph.el);
-        SelectionUtils.setCursor(paragraph.el, 0); 
+
+        setTimeout(() => {
+            SelectionUtils.setCursor(paragraph.el.lastChild?.lastChild, 1);
+        })   
     }
 
     render() {
