@@ -1,7 +1,7 @@
 import { Editor } from ".";
 import Msentence from "./sentence";
 import Mword from "./word";
-import { debounce, throttle } from "./utils";
+import { debounce } from "./utils";
 
 type MparagraphOption = {
     editor: Editor;
@@ -57,6 +57,12 @@ export default class Mparagraph {
             characterData: true,
         });
         this.addSentence();
+    }
+
+
+    // 处理并添加到句子中去
+    private dealTextAndInsertIntoSentence() {
+
     }
 
     get value() {

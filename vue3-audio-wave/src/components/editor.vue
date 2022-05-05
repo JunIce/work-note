@@ -1,13 +1,20 @@
 <template>
-    <div class="content">
+    <div class="header">
+        <t-button theme="default" variant="base"> 填充按钮 </t-button>
+    </div>
+    <div class="menu-section">
         <button @click="toggle">切换显示拼音</button>
         <!-- <button @click="getSelection">selection</button> -->
         <button @click="pinyin">标注拼音</button>
         <button @click="insertMaker">插入标记</button>
         <button @click="collapseRange">折叠选区</button>
         <button @click="selectedMark">划选标记</button>
-
+    </div>
+    <div class="content">
         <div id="editor" ref="editorRef" contenteditable="true"></div>
+    </div>
+    <div class="footer">
+
     </div>
 </template>
 
@@ -95,16 +102,46 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.header {
+    height: 66px;
+}
+
+.menu-section {
+    height: 76px;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    background: #f4f6f7;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 40px;
+    padding: 0 16px;
+    border-top: 1px solid #e5e5e5;
+    background-color: #f4f4f4;
+}
+
 .content {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 182px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px 48px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #002030;
+    background-color: #fff;
+    overflow-y: auto;
+    position: relative;
+    overflow-x: hidden;
 
     #editor {
         width: 90%;
         height: 400px;
-        padding: 20px;
-        border: 1px solid #666;
         margin: auto;
+        outline: none;
 
         rt {
             user-select: none;

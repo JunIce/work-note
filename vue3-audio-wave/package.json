@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "html-janitor": "^2.0.4",
     "mockjs": "^1.1.0",
+    "tdesign-vue-next": "^0.14.0",
     "vue": "^3.2.33"
   },
   "devDependencies": {

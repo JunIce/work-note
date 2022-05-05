@@ -1,12 +1,6 @@
 <template>
-    <div class="flex">
-        <div style="width: 70%">
-            <!-- <h1>123</h1> -->
-            <editorVue />
-        </div>
-        <div style="width: 30%">
-            <demo />
-        </div>
+    <div class="article">
+        <editorVue></editorVue>
     </div>
 </template>
 
@@ -26,7 +20,8 @@ export default {
 #app {
     height: 100%;
 }
-.flex {
-    display: flex;
+
+.article {
+    height: 100%;
 }
 </style>

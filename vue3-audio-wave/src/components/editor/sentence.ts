@@ -27,7 +27,7 @@ export default class Msentence {
 
     _toCreateTextNodes(wordStr: string = "") {
         for (let i = 0; i < wordStr.length; i++) {
-            let word = new Mword({ text: wordStr.charAt(i) });
+            let word = new Mword({ tag: 'span', text: wordStr.charAt(i) });
             word.sentence = this;
             word.editor = this.editor;
 
