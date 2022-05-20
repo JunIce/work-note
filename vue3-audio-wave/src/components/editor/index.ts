@@ -73,15 +73,16 @@ export class Editor {
     }
 
     onInput(e: KeyboardEvent) {
-        logger(e);
+        // logger(e);
     }
 
     onFocus() {
-        logger(SelectionUtils.anchorNode);
+        // logger(SelectionUtils.anchorNode);
     }
 
     onClick(e: PointerEvent) {
         let target = e.target as HTMLElement;
+        logger(target)
         if (
             target.nodeName === "RUBY" &&
             target.getAttribute("data-type") === "sentence"
@@ -105,6 +106,7 @@ export class Editor {
             if (selection?.type === "Caret") {
                 // console.log(range.startContainer)
                 this._caretBaseNode = range.startContainer;
+                logger(range)
             }
         }
     }

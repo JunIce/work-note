@@ -3,6 +3,7 @@ import Msentence from "./sentence";
 import Mword from "./word";
 import { debounce } from "./utils";
 import Dom from "./dom";
+import SelectionUtils from "./SelectionUtils";
 
 type MparagraphOption = {
     editor: Editor;
@@ -17,7 +18,7 @@ export default class Mparagraph {
 
     private update = debounce(
         (mutations: MutationRecord[], _observer: MutationObserver) => {
-            console.log(mutations);
+            // console.log(mutations);
             
             mutations.forEach((mutation) => {
                 // text node change
@@ -36,10 +37,23 @@ export default class Mparagraph {
 
                         let temp = Dom.make('span')
                         temp.appendChild(node)
+                        let tempChildNode = temp.lastChild
 
                         wordNode?.insertAdjacentHTML('afterend', temp.innerHTML)
                         wordNode?.remove()
                         temp?.remove()
+
+                        // let range = document.createRange()
+
+                        // // range.selectNode(tempChildNode!)
+                        // range.setStart(tempChildNode!, 0)
+                        // range.setEnd(tempChildNode!, 1)
+
+                        // let selection = SelectionUtils.get()
+                        // selection.removeAllRanges()
+                        // selection.addRange(range)
+                        // selection.collapseToEnd()
+
                     }
                 }
             });
