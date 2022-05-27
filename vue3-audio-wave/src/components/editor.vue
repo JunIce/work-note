@@ -1,6 +1,12 @@
 <template>
     <div class="header">
         <t-button theme="default" variant="base"> 填充按钮 </t-button>
+            
+        <ruby>前<rt>qián</rt></ruby>
+        <ruby>端<rt>duān</rt></ruby>
+        <ruby>小<rt>xiao</rt></ruby>
+        <ruby>学<rt>xue</rt></ruby>
+        <ruby>生<rt>sheng</rt></ruby>
     </div>
     <div class="menu-section">
         <t-button @click="toggle">切换显示拼音</t-button>
@@ -103,6 +109,10 @@ export default defineComponent({
 <style lang="less" scoped>
 .header {
     height: 66px;
+
+    rt {
+        user-select: none;
+    }
 }
 
 .menu-section {
