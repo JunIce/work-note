@@ -43,7 +43,6 @@ export default {
       type: Number,
       default: 0,
     },
-    
 
     nodes: {
       type: Array,
@@ -60,8 +59,28 @@ export default {
         sendNodeCode: "2",
         landFixNodeCode: "3",
         shipFixNodeCode: "4",
-      })
-    }
+      }),
+    },
+
+    removeFilter: {
+      type: Function,
+      default: () => true,
+    },
+    // 是否是发起者
+    isStarter: {
+      type: Boolean,
+      default: false,
+    },
+    // 发起节点名称
+    startNodeName: {
+      type: String,
+      required: false,
+    },
+    // 固定节点名称
+    fixedNodeName: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
@@ -80,7 +99,7 @@ export default {
         },
         {
           // typeName: this.approveNodeName,
-          typeId: '1', // 审批节点
+          typeId: "1", // 审批节点
           style: "node-info-approve",
           typeStyle: {
             backgroundColor: "#1682E6",
@@ -89,7 +108,7 @@ export default {
         },
         {
           // typeName: this.sendNodeName,
-          typeId: '2', // 抄送节点
+          typeId: "2", // 抄送节点
           style: "node-info-send",
           typeStyle: {
             backgroundColor: "#EEACB4",
@@ -110,26 +129,33 @@ export default {
     this.allNodeList = [];
     this.nodeList = [];
     this.startNode = null;
-
+    // if (this.startNodeName) {
+    //   this.nodeTypeMap["6"].name = this.startNodeName;
+    // }
+    // if (this.fixedNodeName) {
+    //   this.nodeTypeMap[this.fixedNodeType].name = this.fixedNodeName;
+    // }
     // 更新所有节点
     this.updateNodeList(this.nodes);
   },
   computed: {
     canAddApplyNode() {
-      return !!this.nodeList.find(
-        (item) => item.nodeType == 5
-      );
+      return !!this.nodeList.find((item) => item.nodeType == 5);
     },
     canAddFixedNode() {
       return !!this.nodeList.find(
         (item) => item.nodeType == this.fixedNodeType
       );
     },
+    actionAuth() {
+      if (this.isStarter) return this.currentNodeToAddNext.nodeType == 6
+      return false
+    }
   },
 
   methods: {
     genNode(node) {
-      let vm = this
+      let vm = this;
       let currentNode = {
         id: count++,
         node,
@@ -139,15 +165,14 @@ export default {
       };
 
       currentNode.render = this.render;
-      currentNode.update = function(data = {}) {
+      currentNode.update = function (data = {}) {
         try {
-          Object.assign(this.node, data)
+          Object.assign(this.node, data);
         } catch (error) {
-          
         } finally {
-          vm.$forceUpdate()
+          vm.$forceUpdate();
         }
-      }
+      };
 
       node._currentNode = currentNode;
 
@@ -193,9 +218,9 @@ export default {
         let node = this.genNode({
           nodeType,
           name: this.getNodeNameByNodeType(nodeType),
-          authId: '',
-          authName: '',
-          authType: ''
+          authId: "",
+          authName: "",
+          authType: "",
         });
 
         node.prev = originNode;
@@ -209,12 +234,12 @@ export default {
         this.$emit("add-node", node.node);
       };
 
-      switch(nodeType) {
+      switch (nodeType) {
         // 审批/ 抄送节点
         case 1:
         case 2:
-            intertNode();
-          break
+          intertNode();
+          break;
 
         // 固定节点
         case 3:
@@ -224,8 +249,8 @@ export default {
           } else {
             intertNode();
           }
-          break
-        
+          break;
+
         case 5:
           // 申请节点
           if (nextNode.nodeType == 5) {
@@ -233,7 +258,7 @@ export default {
           } else {
             intertNode();
           }
-          break
+          break;
       }
     },
 
@@ -250,17 +275,20 @@ export default {
      * @param {*} node
      */
     deleteNode(node) {
-      let linkNode = node._currentNode;
-      let prev = linkNode.prev;
-      let next = linkNode.next;
+      // 增加filter
+      if (this.removeFilter(node)) {
+        let linkNode = node._currentNode;
+        let prev = linkNode.prev;
+        let next = linkNode.next;
 
-      if(prev) {
-        prev.next = next;
+        if (prev) {
+          prev.next = next;
+        }
+        if (next) {
+          next.prev = prev;
+        }
+        this.render();
       }
-      if(next) {
-        next.prev = prev;
-      }
-      this.render();
     },
 
     /**
@@ -269,6 +297,13 @@ export default {
      */
     getNodeNameByNodeType(typeId) {
       let nodeName = this.platformName + nodeTypeMap[typeId]["name"];
+      if (typeId == 6 && this.startNodeName) {
+        nodeName = this.startNodeName;
+      }
+      if (typeId == this.fixedNodeType && this.fixedNodeName) {
+        nodeName = this.fixedNodeName;
+      }
+
       return nodeName;
     },
 
@@ -279,13 +314,18 @@ export default {
     updateNodeList(nodeInfos = []) {
       let nodeList = [];
 
-      if(nodeInfos.length == 0) {
+      if (nodeInfos.length == 0) {
         nodeInfos.push({
           nodeType: "6",
-        })
+        });
+        if (this.isStarter) {
+          nodeInfos.push({
+            nodeType: this.fixedNodeType + "",
+          });
+        }
         nodeInfos.push({
           nodeType: "7",
-        })
+        });
       }
 
       nodeInfos.forEach((node, idx) => {
@@ -341,7 +381,7 @@ export default {
      */
     getAllNodes() {
       return this.nodeList.map((node, idx) => {
-        if(node.nodeType == 1 || node.nodeType == 2) {
+        if (node.nodeType == 1 || node.nodeType == 2) {
           return {
             nodeType: node.nodeType,
             name: node.name,
@@ -357,12 +397,12 @@ export default {
           nodeType: node.nodeType,
           name: node.name,
           sortOrder: idx + 1,
-        }
+        };
       });
     },
 
     clear() {
-      this.updateNodeList([])
-    }
+      this.updateNodeList([]);
+    },
   },
 };

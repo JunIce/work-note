@@ -4,8 +4,12 @@
       ref="flowChart"
       @add-node="onAddNode"
       @config-node="onConfigNode"
+      :remove-filter="removeFilter"
       :platform="platform"
       :nodes="nodes"
+      :isStarter="isStarter"
+      :startNodeName="startNodeName"
+      :fixedNodeName="fixedNodeName"
     >
       <template #extra>
         <el-button v-if="showClear" @click="clearNodes">清空</el-button>
@@ -27,9 +31,9 @@
               <el-input v-model="node.name"> </el-input>
             </el-form-item>
 
-            <el-form-item label="authId" prop="authId">
+            <!-- <el-form-item label="authId" prop="authId">
               <el-input v-model="node.authId"> </el-input>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item
               label="类型"
@@ -65,9 +69,9 @@
                   <el-radio label="3">指定在船用户</el-radio>
                 </template>
                 <template v-if="platform == 1">
-                  <el-radio label="4">直系领导</el-radio>
+                  <el-radio v-if="isStarter" label="4">直系领导</el-radio>
                   <el-radio label="3">指定岸基人员</el-radio>
-                  <el-radio label="5">发起人自己</el-radio>
+                  <el-radio v-if="isStarter" label="5">发起人自己</el-radio>
                   <el-radio label="2">指定部门/职务</el-radio>
                 </template>
               </el-radio-group>
@@ -93,8 +97,8 @@
                 @change="onAuthIdChange"
               >
                 <el-option
-                  v-for="item in authIdDataList"
-                  :key="item.value"
+                  v-for="(item, idx) in authIdDataList"
+                  :key="idx"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -122,8 +126,8 @@
                 @change="onAuthIdChange"
               >
                 <el-option
-                  v-for="item in authIdDataList"
-                  :key="item.value"
+                  v-for="(item, idx) in authIdDataList"
+                  :key="idx"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -138,7 +142,7 @@
               :rules="[
                 {
                   required: true,
-                  message: '请选择角色',
+                  message: '请选择人员',
                   trigger: 'change',
                 },
               ]"
@@ -150,8 +154,8 @@
                 @change="onAuthIdChange"
               >
                 <el-option
-                  v-for="item in authIdDataList"
-                  :key="item.value"
+                  v-for="(item, idx) in authIdDataList"
+                  :key="idx"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -183,21 +187,21 @@
                   align="center"
                 >
                   <el-radio
-                    :value="row.$show"
+                    :value="row.type"
                     label="0"
                     @change="(e) => clickChange(0, row)"
                   ></el-radio>
                 </el-table-column>
                 <el-table-column label="只读" #default="{ row }" align="center">
                   <el-radio
-                    :value="row.$show"
+                    :value="row.type"
                     label="1"
                     @change="(e) => clickChange(1, row)"
                   ></el-radio>
                 </el-table-column>
                 <el-table-column label="隐藏" #default="{ row }" align="center">
                   <el-radio
-                    :value="row.$show"
+                    :value="row.type"
                     label="2"
                     @change="(e) => clickChange(2, row)"
                   ></el-radio>
@@ -253,6 +257,24 @@ export default {
         return [];
       },
     },
+    removeFilter: {
+      type: Function,
+    },
+    // 是否是发起者
+    isStarter: {
+      type: Boolean,
+      default: false,
+    },
+    // 发起节点名称
+    startNodeName: {
+      type: String,
+      required: false,
+    },
+    // 固定节点名称
+    fixedNodeName: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
@@ -281,24 +303,14 @@ export default {
       if (this.node?.nodeType == 2) return "抄送人";
     },
   },
-  watch: {
-    fields() {
-      this.doConcatFields();
-    },
-  },
   methods: {
-    doConcatFields() {
-      // 构建值map
-      let valueMap = {};
-      this.flowFields.forEach((field) => {
-        valueMap[field.name] = valueMap[field.type];
-      });
-
+    doConcatFields(fields = []) {
       // 构建数据map
       let map = {};
       this.fields.forEach((field) => {
+        let target = fields.find(item => item.name == field.fieldName)
         map[field.groupKey] = map[field.groupKey] || [];
-        field.$show = valueMap[field.fieldName] || "0";
+        field.type = target?.type || "0";
         map[field.groupKey].push(field);
       });
 
@@ -338,6 +350,7 @@ export default {
       this.linkNode = node._currentNode;
       this.node = nodeData;
       this.node.authId = nodeData.authId || "";
+      this.doConcatFields(node.fields || []);
       if (this.node.authId) {
         this.node.authIds = nodeData.authId.split(",");
       }
@@ -359,6 +372,10 @@ export default {
       });
 
       this.node.authName = authNameList.join(",");
+      console.log(data);
+      this.$nextTick(() => {
+        this.$forceUpdate()
+      })
     },
     // 提交方法 处理两个页签的数据
     submit() {
@@ -368,8 +385,9 @@ export default {
             .reduce((pre, aft) => [...pre, ...aft], [])
             .map((item) => {
               return {
+                // id: item.id,
                 name: item.fieldName,
-                type: item.$show,
+                type: item.type,
               };
             });
 
@@ -392,7 +410,6 @@ export default {
     // 人员类型的change 初始化 authId 和 authName
     authTypeChange(authType) {
       // <!-- 处理人类型: 1角色 2部门 3用户 4发起人上级领导 5发起人 -->
-
       this.$refs.form.clearValidate("authIds");
 
       if (authType == 1) {
@@ -417,9 +434,8 @@ export default {
       this.$refs.flowChart?.clear();
     },
     clickChange(e, row) {
-      this.$set(row, "$show", String(e));
+      this.$set(row, "type", String(e));
       this.$forceUpdate();
-      console.log(e);
     },
   },
 };

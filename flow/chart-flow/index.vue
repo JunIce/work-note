@@ -24,7 +24,13 @@
       >
         <div class="node-panel">
           <button
-            v-if="!(node.nodeType == 6 || node.nodeType == 7)"
+            v-if="
+              !(
+                node.nodeType == 6 ||
+                node.nodeType == 7 ||
+                (isStarter && node.nodeType == fixedNodeType)
+              )
+            "
             class="node-delete"
             @click.stop="deleteNode(node)"
           >
@@ -68,29 +74,36 @@
       :center="true"
     >
       <div class="addnode-dialog-content">
+        <template v-if="isStarter">
+          <el-button
+            :disabled="
+              !(currentNodeToAddNext.nodeType == 6) ||
+              canAddApplyNode
+            "
+            class="add-btn"
+            @click="addCustomNewNode(5)"
+          >
+            申请
+          </el-button>
+          <el-button
+            :disabled="
+              currentNodeToAddNext.nodeType == 6 || canAddFixedNode
+            "
+            class="add-btn"
+            @click="addCustomNewNode(fixedNodeType)"
+          >
+            固定节点
+          </el-button>
+        </template>
         <el-button
-          :disabled="!(currentNodeToAddNext.nodeType == 6) || canAddApplyNode"
-          class="add-btn"
-          @click="addCustomNewNode(5)"
-        >
-          申请
-        </el-button>
-        <el-button
-          :disabled="currentNodeToAddNext.nodeType == 6 || canAddFixedNode"
-          class="add-btn"
-          @click="addCustomNewNode(fixedNodeType)"
-        >
-          固定节点
-        </el-button>
-        <el-button
-          :disabled="currentNodeToAddNext.nodeType == 6"
+          :disabled="actionAuth"
           class="add-btn"
           @click="addCustomNewNode(1)"
         >
           审批
         </el-button>
         <el-button
-          :disabled="currentNodeToAddNext.nodeType == 6"
+          :disabled="actionAuth"
           class="add-btn"
           @click="addCustomNewNode(2)"
         >
