@@ -1,0 +1,5 @@
+:8001 {
+    header Custom-Header "caddy-server"
+    encode gzip
+    reverse_proxy http://localhost:3000
+}
