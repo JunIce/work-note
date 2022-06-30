@@ -1,17 +1,20 @@
 <template>
     <div class="article">
-        <editorVue></editorVue>
+        <test></test>
+        <!-- <editorVue></editorVue> -->
     </div>
 </template>
 
 <script lang="ts">
 import editorVue from "./components/editor.vue";
 import demo from "./components/demo.vue";
+import test from "./view/test.vue"
 export default {
     name: "App",
     components: {
         editorVue,
         demo,
+        test
     },
 };
 </script>
