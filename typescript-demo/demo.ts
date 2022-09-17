@@ -90,3 +90,97 @@ type MyGetPropsRefType<Props extends {}> =
 
 type p11 = MyGetPropsRefType<{ref: number}>
 type p12 = MyGetPropsRefType<{ref: undefined}>
+
+
+// push
+type MyPush<Arr extends unknown[], P> = [...Arr, P]
+type p13 = MyPush<[1,2,3], 4>
+
+// unshift
+type MyUnshift<Arr extends unknown[], P> = [P, ...Arr]
+type p14 = MyUnshift<[1,2,3], 4>
+
+// zip
+type MyZip<T extends unknown[], S extends unknown[]> = 
+    T extends [infer T1, ...infer T2] ?
+        S extends [infer S1, ...infer S2] ?
+            [[T1, S1], MyZip<T2, S2>]
+            : []
+        :[]
+
+type p15 = MyZip<["a", "b", "c"], [1, 2, 3]>
+
+// uppercase
+type MyUpperCase<S extends string> = S extends `${infer F}${infer Rest}` ? `${Uppercase<F>}${Rest}` : S
+type p16 = MyUpperCase<"hello">
+
+// camelCase
+type MyCamelCase<S extends string> = S extends `${infer Left}_${infer R}${infer Rest}` ? `${Left}${Uppercase<R>}${MyCamelCase<Rest>}` : S
+
+type p17 = MyCamelCase<'hello_hello_hello_world'>
+
+// dropsubstr
+type MyDropStr<S extends string, D extends string> = S extends `${infer Left}${D}${infer L}` ? MyDropStr<`${Left}${L}`, D> : S
+
+type p18 = MyDropStr<"hello_hello_hello_world", "l">
+
+// append function args
+type MyAppendArgs<F extends Function, Arg> = F extends (...args: infer Args) => infer ReturnType ? (...args: [...Args, Arg]) => ReturnType : never;
+
+type p19 = MyAppendArgs<(a: number, b: string) => any, boolean>
+
+// index object
+type obj = {
+    readonly name: string;
+    age?: number;
+    gender: boolean;
+}
+
+type MyMapping<Obj extends object> = {
+    [K in keyof Obj]: [Obj[K], K]
+}
+
+type p20 = MyMapping<{ a: 1, b: 2 }>
+
+// uppercase key
+type MyUpperCaseKey<Obj extends object> = {
+    [K in keyof Obj as Uppercase<K & string>]: Obj[K]
+}
+type p21 = MyUpperCaseKey<{ acc: 1, b: 2 }>
+
+// Record
+type MyRecord<K extends string | number | symbol, T> = {
+    [P in K]: T; 
+}
+
+// readonly
+type MyReadonly<T> = {
+    readonly [K in keyof T] : T[K]
+}
+type p22 = MyReadonly<obj>
+
+// partial
+
+type MyPartial<T> = {
+    [K in keyof T] ?: T[K]
+}
+type p23 = MyPartial<obj>
+
+// mutable
+type MyMutable<T> = {
+    -readonly [K in keyof T] ?: T[K]
+}
+type p24 = MyMutable<obj>
+
+// required
+type MyRequired<T> = {
+    [K in keyof T] -?: T[K]
+}
+type p25 = MyRequired<obj>
+
+
+// filterValueType
+type MyFilterByType<T extends MyRecord<string, any>, ValueType> = {
+    [K in keyof T as T[K] extends ValueType ? K : never] : T[K]
+}
+type p26 = MyFilterByType<obj, string>
