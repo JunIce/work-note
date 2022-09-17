@@ -14,6 +14,10 @@ const plugin = {
     let result = await esbuild.build({
       entryPoints: ['./src/index.js'],
       outdir: 'dist',
+      bundle: true,
+      outExtension: { 
+        '.js': '.mjs'
+      },
       minify: true,
       metafile: true,
     //   assetNames: 'assets/[name]-[hash]',
