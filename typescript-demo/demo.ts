@@ -372,6 +372,27 @@ type MyGreaterThen<
     ? false
     : MyGreaterThen<Num1, Num2, [unknown, ...Count]>;
 
+type p42 = MyGreaterThen<20, 21>;
+type p43 = MyGreaterThen<20, 19>;
 
-type p42 = MyGreaterThen<20, 21>
-type p43 = MyGreaterThen<20, 19>
+// todo
+// union
+type a1 = "a" | "b" | "c";
+type MyUpperCaseA<T extends string> = T extends "a" ? MyUpperCase<T> : T;
+type p44 = MyUpperCaseA<a1>;
+
+// camelCase
+type MyCamelCaseNext<T extends string> =
+    T extends `${infer L}_${infer R}${infer Rest}`
+        ? `${L}${Uppercase<R>}${MyCamelCaseNext<Rest>}`
+        : T;
+
+type p45 = MyCamelCaseNext<"aa_bb_cc">;
+
+// 
+type MyCamelCaseArr<Arr extends unknown[]> = Arr extends [
+    infer Item,
+    ...infer Rest
+]
+    ? [MyCamelCaseNext<Item & string>, ...MyCamelCaseArr<Rest>]
+    : [];
