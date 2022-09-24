@@ -461,6 +461,7 @@ type MyIsTuple<T> = T extends readonly [...params: infer Eles]
 type p57 = MyIsTuple<number[]>;
 type p58 = MyIsTuple<[1, 2, 3]>;
 
+// UnionToIntersection
 type MyUnionToIntersection<U> = (
     U extends U ? (x: U) => unknown : never
 ) extends (x: infer R) => unknown
@@ -468,3 +469,13 @@ type MyUnionToIntersection<U> = (
     : never;
 
 type p59 = MyUnionToIntersection<{ a: 1 } | { b: 2 }>;
+
+
+// getOptional
+type MyGetOptional<U extends Record<string, any>> = {
+    [
+        K in keyof U as {} extends Pick<U, K> ? K : never 
+    ] : U[K]
+}
+
+type p60 = MyGetOptional<{name: string, age?: number}>
