@@ -502,5 +502,22 @@ type MergeValues<One, Other> = One extends Other
     ? [One, ...Other]
     : [One, Other];
 
+type p61 = MyQueryStr<"a=1&b=2&c=3&d=4">;
 
-type p61 = MyQueryStr<'a=1&b=2&c=3&d=4'>
+// KebabCaseToCamelCase
+type KebabCaseToCamelCase<T extends string> =
+    T extends `${infer First}_${infer Rest}`
+        ? `${First}${KebabCaseToCamelCase<Capitalize<Rest>>}`
+        : T;
+
+type p62 = KebabCaseToCamelCase<"aaa_bbb_ccc">;
+
+// CamelCaseToKebabCase
+type CamelCaseToKebabCase<T extends string> =
+    T extends `${infer First}${infer Rest}`
+        ? First extends Lowercase<First>
+            ? `${First}${CamelCaseToKebabCase<Rest>}`
+            : `-${Lowercase<First>}${CamelCaseToKebabCase<Rest>}`
+        : T;
+
+type p63 = CamelCaseToKebabCase<"aaaBbbCcc">;
