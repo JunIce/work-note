@@ -470,12 +470,37 @@ type MyUnionToIntersection<U> = (
 
 type p59 = MyUnionToIntersection<{ a: 1 } | { b: 2 }>;
 
-
 // getOptional
 type MyGetOptional<U extends Record<string, any>> = {
-    [
-        K in keyof U as {} extends Pick<U, K> ? K : never 
-    ] : U[K]
-}
+    [K in keyof U as {} extends Pick<U, K> ? K : never]: U[K];
+};
 
-type p60 = MyGetOptional<{name: string, age?: number}>
+type p60 = MyGetOptional<{ name: string; age?: number }>;
+
+// queryString
+type MyQueryStr<T extends string> = T extends `${infer First}&${infer Rest}`
+    ? MergeParams<ParseQuery<First>, MyQueryStr<Rest>>
+    : ParseQuery<T>;
+type ParseQuery<T extends string> = T extends `${infer First}=${infer Last}`
+    ? { [K in First]: Last }
+    : never;
+type MergeParams<
+    OneParam extends Record<string, any>,
+    OtherParam extends Record<string, any>
+> = {
+    [Key in keyof OneParam | keyof OtherParam]: Key extends keyof OneParam
+        ? Key extends keyof OtherParam
+            ? MergeValues<OneParam[Key], OtherParam[Key]>
+            : OneParam[Key]
+        : Key extends keyof OtherParam
+        ? OtherParam[Key]
+        : never;
+};
+type MergeValues<One, Other> = One extends Other
+    ? One
+    : Other extends unknown[]
+    ? [One, ...Other]
+    : [One, Other];
+
+
+type p61 = MyQueryStr<'a=1&b=2&c=3&d=4'>
