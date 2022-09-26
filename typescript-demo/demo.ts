@@ -521,3 +521,74 @@ type CamelCaseToKebabCase<T extends string> =
         : T;
 
 type p63 = CamelCaseToKebabCase<"aaaBbbCcc">;
+
+// chunk
+type Chunk<
+    arr extends unknown[],
+    len extends number,
+    CurrItem extends unknown[] = [],
+    res extends unknown[] = []
+> = arr extends [infer First, ...infer Rest]
+    ? CurrItem["length"] extends len
+        ? Chunk<Rest, len, [First], [...res, CurrItem]>
+        : Chunk<Rest, len, [...CurrItem, First], res>
+    : [...res, CurrItem];
+
+type p64 = Chunk<[1, 2, 3, 4, 5, 6], 3>;
+
+// tupleToObject
+type TupleToObject<T extends unknown[], Value> = T extends [
+    infer First,
+    ...infer Rest
+]
+    ? {
+          [K in First as K extends keyof any
+              ? K
+              : never]: Rest extends unknown[]
+              ? TupleToObject<Rest, Value>
+              : Value;
+      }
+    : Value;
+
+type p65 = TupleToObject<["a", "b", "c"], 1>;
+
+// PartialObjectPropByKeys
+
+type PartialObjectPropByKeys<
+    Obj extends Record<string, any>,
+    Key extends keyof Obj
+> = MyCopy<Partial<Pick<Obj, Extract<keyof Obj, Key>>> & Omit<Obj, Key>>;
+
+interface Dong {
+    name: string;
+    age: number;
+    address: string;
+}
+
+type MyCopy<Obj extends Record<string, any>> = {
+    [K in keyof Obj]: Obj[K];
+};
+
+type p66 = PartialObjectPropByKeys<Dong, "name">;
+
+//
+declare function aaf(name: string): string;
+declare function aaf(name: number): boolean;
+
+type aaf1 = ((name: string) => string) & ((name: number) => boolean);
+
+type p67 = ReturnType<aaf1>;
+
+type FnUnionToIntersection<T> = MyUnionToIntersection<
+    T extends any ? () => T : never
+>;
+
+type p68 = ReturnType<FnUnionToIntersection<"a" | "b">>;
+
+type MyTupleToUnion<T> = MyUnionToIntersection<
+    T extends any ? () => T : never
+> extends () => infer R
+    ? [...MyTupleToUnion<Exclude<T, R>>, R]
+    : [];
+
+type p69 = MyTupleToUnion<"a" | "b" | "c">;
