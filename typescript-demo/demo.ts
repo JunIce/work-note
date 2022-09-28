@@ -592,3 +592,125 @@ type MyTupleToUnion<T> = MyUnionToIntersection<
     : [];
 
 type p69 = MyTupleToUnion<"a" | "b" | "c">;
+
+// join
+
+// declare function join<D extends string>(
+//     delimiter: D
+// ): <Items extends string[]>(...parts: Items) => JoinType<Items, D>;
+declare function PJoin<Delimiter extends string>(
+    delimiter: Delimiter
+): <Items extends string[]>(...parts: Items) => JoinType<Items, Delimiter>;
+
+type JoinType<
+    Items extends any[],
+    D extends string,
+    Result extends string = ""
+> = Items extends [infer Cur, ...infer Rest]
+    ? JoinType<Rest, D, `${Result}${D}${Cur & string}`>
+    : RemoveFirstDelimiter<Result, D>;
+
+type RemoveFirstDelimiter<
+    S extends string,
+    Delimiter extends string = "_"
+> = S extends `${Delimiter}${infer Rest}` ? Rest : S;
+
+// type p70 = PJoin('-')('jiangsu','nanjing','qixia')
+
+type obj112 = {
+    aaa_bbb: string;
+    bbb_ccc: [
+        {
+            ccc_ddd: string;
+        },
+        {
+            ddd_eee: string;
+            eee_fff: {
+                fff_ggg: string;
+            };
+        }
+    ];
+};
+
+type MyCamelCaseArr1<Arr extends unknown[]> = Arr extends [
+    infer First extends Record<string, any>,
+    ...infer Rest
+]
+    ? [MyDeepCamelize<First>, ...MyCamelCaseArr<Rest>]
+    : [];
+
+type MyDeepCamelize<ObjData extends Record<string, any>> =
+    ObjData extends unknown[]
+        ? MyCamelCaseArr1<ObjData>
+        : {
+              [Key in keyof ObjData as Key extends `${infer First}_${infer Rest}`
+                  ? `${First}${Capitalize<Rest>}`
+                  : Key]: MyDeepCamelize<ObjData[Key]>;
+          };
+
+type p71 = MyDeepCamelize<obj112>;
+
+// type CamelizeArr<Arr> = Arr extends [infer First extends Record<string, any>, ...infer Rest]
+//     ? [DeepCamelize<First>, ...CamelizeArr<Rest>]
+//     : []
+
+// type DeepCamelize<Obj extends Record<string, any>> =
+//     Obj extends unknown[]
+//         ? CamelizeArr<Obj>
+//         : {
+//             [Key in keyof Obj
+//                 as Key extends `${infer First}_${infer Rest}`
+//                     ? `${First}${Capitalize<Rest>}`
+//                     : Key
+//             ] : DeepCamelize<Obj[Key]>
+//         };
+
+type MyAllPathKey<Obj extends Record<string, any>> = {
+    [Key in keyof Obj]: Key extends string
+        ? Obj[Key] extends Record<string, any>
+            ? Key | `${Key}.${MyAllPathKey<Obj[Key]>}`
+            : Key
+        : never;
+}[keyof Obj];
+
+type p72 = MyAllPathKey<{
+    a: {
+        b: {
+            b1: string;
+            b2: string;
+        };
+        c: {
+            c1: string;
+            c2: string;
+        };
+    };
+}>;
+
+
+// defaultize
+
+type MyDefaultize<A, B> = 
+    Pick<A, Exclude<keyof A, keyof B>>
+    & Partial<Pick<A, Extract<keyof A, keyof B>>>
+    & Partial<Pick<B, Exclude<keyof B, keyof A>>>
+
+type A = {
+    aaa: 111,
+    bbb: 222
+}
+type B = {
+    ccc: 333,
+    bbb: 222
+}
+
+type p73 = MyCopy<MyDefaultize<A, B>>
+
+
+type MyStrToNum<Str> = Str extends `${infer Num extends number}` ? Num: Str
+
+enum Code {
+    a = 111,
+    b = 222,
+    c = '333'
+}
+type p74 = MyStrToNum<Code>
