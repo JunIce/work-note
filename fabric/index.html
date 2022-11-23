@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/fabric.js/5.2.4/fabric.js"></script>
+</head>
+
+<body>
+    <div class="parent">
+        <canvas id="draw"></canvas>
+        <!-- <div contenteditable="true" class="box"></div> -->
+    </div>
+
+    <style>
+        .parent,
+        canvas,
+        .box {
+            width: 600px;
+            height: 600px;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            color: transparent;
+            /* caret-color: blue; */
+            font-size: 16;
+            line-height: 16px;
+        }
+
+        .abc {
+            background-color: aliceblue;
+        }
+    </style>
+    <script>
+        const draw = new fabric.Canvas('draw', {
+            width: 600,
+            height: 600
+        })
+        const text = new fabric.Text('', {
+            fontSize: 16,
+            lineHeight: 16,
+            textBackgroundColor: 'aliceblue',
+            selectable: true,
+            selectionBackgroundColor: 'red'
+        })
+        draw.add(text)
+
+
+        const circle = new fabric.Circle({
+            radius: 20,
+            fill: '#0af',
+            selectable: true,
+
+        })
+
+        draw.add(circle)
+
+        console.log(text)
+
+        // const editor = document.querySelector(".box")
+        // editor.addEventListener("input", e => {
+        //     console.log(e.target.textContent);
+        //     text.text = (e.target.textContent)
+        //     // const text = new fabric.Text(e.target.textContent)
+        //     draw.renderAll()
+        // })
+
+    </script>
+</body>
+
+</html>
