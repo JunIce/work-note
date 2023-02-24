@@ -1,0 +1,40 @@
+version: "2.2"
+services:
+  front:
+    build:
+#     源路径映射
+      context: ./
+      dockerfile: ./nginx/Dockerfile
+    expose:
+      - 3003
+    restart: always
+    image: nginx-dev
+    container_name: nginx-dev
+    networks:
+      - sturgeon-official-website-dev
+    ports:
+#      端口映射
+      - 3003:80
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - nodejs
+
+  nodejs:
+    build:
+      context: ./
+      dockerfile: ./node/Dockerfile
+
+    expose:
+      - 3000
+    # ports:
+    #   - 3000:3000
+    restart: always
+    image: node-dev
+    container_name: node-dev
+    networks:
+      - sturgeon-official-website-dev
+
+networks:
+  sturgeon-official-website-dev:
