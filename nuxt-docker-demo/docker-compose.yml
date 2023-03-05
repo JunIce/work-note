@@ -12,3 +12,8 @@ services:
       - 5001:5000
 
     command: ["yarn", "start"]
+    networks:
+      - nuxt-networks
+
+networks:
+  nuxt-networks:
