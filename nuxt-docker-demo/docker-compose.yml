@@ -1,0 +1,14 @@
+version: '3'
+services:
+  nuxt-app:
+    build: 
+      context: .
+      dockerfile: "./Dockerfile"
+
+    container_name: "nuxt-demo"
+    environment:
+      NITRO_PORT: 5000
+    ports:
+      - 5001:5000
+
+    command: ["yarn", "start"]
