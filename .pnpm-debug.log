@@ -1,0 +1,20 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 error pnpm": {
+    "shortMessage": "Command failed with exit code 1: /private/var/folders/jy/7d8n7tvn6zl9vw_rshq3yq1h0000gp/T/dlx-12567/bin/nuxi init nuxt-docker-demo",
+    "command": "/private/var/folders/jy/7d8n7tvn6zl9vw_rshq3yq1h0000gp/T/dlx-12567/bin/nuxi init nuxt-docker-demo",
+    "escapedCommand": "\"/private/var/folders/jy/7d8n7tvn6zl9vw_rshq3yq1h0000gp/T/dlx-12567/bin/nuxi\" init nuxt-docker-demo",
+    "exitCode": 1,
+    "failed": true,
+    "timedOut": false,
+    "isCanceled": false,
+    "killed": false,
+    "err": {
+      "name": "pnpm",
+      "message": "Command failed with exit code 1: /private/var/folders/jy/7d8n7tvn6zl9vw_rshq3yq1h0000gp/T/dlx-12567/bin/nuxi init nuxt-docker-demo",
+      "stack": "pnpm: Command failed with exit code 1: /private/var/folders/jy/7d8n7tvn6zl9vw_rshq3yq1h0000gp/T/dlx-12567/bin/nuxi init nuxt-docker-demo\n    at makeError (/usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:42372:17)\n    at handlePromise (/usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:42943:33)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Object.handler [as dlx] (/usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:179116:7)\n    at async /usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:183737:21\n    at async run (/usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:183711:34)\n    at async runPnpm (/usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:183922:5)\n    at async /usr/local/lib/node_modules/pnpm/dist/pnpm.cjs:183914:7"
+    }
+  }
+}
