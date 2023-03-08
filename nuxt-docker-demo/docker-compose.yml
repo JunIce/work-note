@@ -11,7 +11,7 @@ services:
     ports:
       - 5001:5000
 
-    command: ["yarn", "start"]
+    command: ["node", "./server/index.mjs"]
     networks:
       - nuxt-networks
 
